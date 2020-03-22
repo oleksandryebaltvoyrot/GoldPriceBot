@@ -30,8 +30,7 @@ public class MarketplaysHelper {
 
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
-        // logger.info(responseBody.trim().substring(0,100));
-        logger.info(responseBody.trim().substring(0,2000));
+        logger.info(responseBody.trim().substring(0,100));
         return responseBody;
     }
 
