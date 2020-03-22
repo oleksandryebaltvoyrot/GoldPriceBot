@@ -20,17 +20,18 @@ import java.util.stream.Collectors;
 
 public class MarketplaysHelper {
     private static final Logger logger = LogManager.getLogger(MarketplaysHelper.class);
-    private static String url = "https://www.microsoft.com/en-gb/p/xbox-live-gold/CFQ7TTC0K5DJ/000C";
+    private static String url = "https://www.microsoft.com/en-us/p/xbox-live-gold/CFQ7TTC0K5DJ/000C?lc=1033&activetab=pivot:gamesanddealstab";
     private static OkHttpClient client = new OkHttpClient();
     private static String run(String url) throws IOException {
         Request request = new Request.Builder()
-                .url(url).header("User-Agent", "PostmanRuntime/7.15.2")
-                .header("content-type", "text/html; charset=utf-8")
+                .url(url)
+                .header("User-Agent", "PostmanRuntime/7.15.2")
+                //.header("content-type", "text/html; charset=utf-8")
                 .build();
 
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
-        logger.info(responseBody);
+        logger.info(responseBody.trim().substring(0,100));
         return responseBody;
     }
 
