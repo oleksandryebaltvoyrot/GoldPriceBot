@@ -25,8 +25,7 @@ public class MarketplaysHelper {
     private static String run(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
-                .header("User-Agent", "PostmanRuntime/7.15.2")
-                .header("content-type", "text/html; charset=utf-8")
+                .header("User-Agent", "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
                 .build();
 
         Response response = client.newCall(request).execute();
