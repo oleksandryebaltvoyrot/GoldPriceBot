@@ -10,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import services.StorageService;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,16 +24,21 @@ public class MarketplaysHelper {
     private static final Logger logger = LogManager.getLogger(MarketplaysHelper.class);
     private static String url = "https://www.microsoft.com/en-us/p/xbox-live-gold/cfq7ttc0k5dj";
     private static OkHttpClient client = new OkHttpClient();
-    private static String run(String url) throws IOException {
+
+    private static String run(String url) throws IOException, URISyntaxException {
         Request request = new Request.Builder()
-                .url(url)
+                .url(encodeUrl(url))
                 .header("User-Agent", "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
                 .build();
 
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
-        logger.info(responseBody.trim().substring(0,100));
+        logger.info(responseBody.trim().substring(0, 100));
         return responseBody;
+    }
+
+    static String encodeUrl(String urlToEncode) throws URISyntaxException {
+        return new URI(urlToEncode).toASCIIString();
     }
 
     private static String extractAllGroups(String text, Frequency pattern) throws InterruptedException {
@@ -62,7 +69,7 @@ public class MarketplaysHelper {
                         .setFrequency(frq.name())
                         .setPrice(extractAllGroups(out, frq)));
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | URISyntaxException e) {
             e.printStackTrace();
         }
         return map;
