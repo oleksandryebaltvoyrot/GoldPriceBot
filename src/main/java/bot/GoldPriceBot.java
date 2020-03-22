@@ -56,7 +56,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "356162982:AAFSBnksaMKDjvday2uHUC-EIYN1Xcu2KlA";
+        return "356162982:AAGFOsyBumDpMw0nUiSw3pg7WCejrmT0SvA";
     }
 
     public void dailyPriceCheck() {
