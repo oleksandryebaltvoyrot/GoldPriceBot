@@ -5,6 +5,11 @@ import models.XboxGoldPrice;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import services.StorageService;
@@ -23,16 +28,21 @@ import java.util.stream.Collectors;
 public class MarketplaysHelper {
     private static final Logger logger = LogManager.getLogger(MarketplaysHelper.class);
     private static String url = "https://www.microsoft.com/en-us/p/xbox-live-gold/cfq7ttc0k5dj";
-    private static OkHttpClient client = new OkHttpClient();
+    //private static OkHttpClient client = new OkHttpClient();
+    static HttpClient client = new DefaultHttpClient();
 
     private static String run(String url) throws IOException, URISyntaxException {
         Request request = new Request.Builder()
                 .url(encodeUrl(url))
                 .header("User-Agent", "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
                 .build();
+        HttpUriRequest re = new HttpGet(url);
+        re.addHeader("User-Agent", "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1");
 
-        Response response = client.newCall(request).execute();
-        String responseBody = response.body().string();
+        //Response response = client.newCall(request).execute();
+        HttpResponse response = client.execute(re);
+        //String responseBody = response.body().string();
+        String responseBody = response.getEntity().getContent().toString();
         logger.info(responseBody.trim().substring(0, 100));
         return responseBody;
     }
