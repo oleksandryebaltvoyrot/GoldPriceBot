@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class MarketplaysHelper {
     private static final Logger logger = LogManager.getLogger(MarketplaysHelper.class);
-    private static String url = "http://www.microsoft.com/en-us/p/xbox-live-gold/CFQ7TTC0K5DJ/000C?lc=1033&activetab=pivot:gamesanddealstab";
+    private static String url = "https://www.microsoft.com/en-us/p/xbox-live-gold/CFQ7TTC0K5DJ/000C?lc=1033&activetab=pivot:gamesanddealstab";
     private static OkHttpClient client = new OkHttpClient();
     private static String run(String url) throws IOException {
         Request request = new Request.Builder()
@@ -30,8 +30,8 @@ public class MarketplaysHelper {
 
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
-        //logger.info(responseBody.trim().substring(0,100));
-        logger.info(responseBody.trim().substring(0,10000));
+        // logger.info(responseBody.trim().substring(0,100));
+        logger.info(responseBody.trim().substring(0,2000));
         return responseBody;
     }
 

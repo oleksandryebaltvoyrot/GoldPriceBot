@@ -39,25 +39,25 @@ public class GoldPriceBot extends TelegramLongPollingBot {
         }
     }
 
-    //    @Override
-//    public String getBotUsername() {
-//        return System.getenv("username");
-//    }
-//
-//    @Override
-//    public String getBotToken() {
-//        return System.getenv("token");
-//    }
-
-    @Override
+        @Override
     public String getBotUsername() {
-        return "GoldPriceBot";
+        return System.getenv("username");
     }
 
     @Override
     public String getBotToken() {
-        return "356162982:AAGFOsyBumDpMw0nUiSw3pg7WCejrmT0SvA";
+        return System.getenv("token");
     }
+
+//    @Override
+//    public String getBotUsername() {
+//        return "";
+//    }
+//
+//    @Override
+//    public String getBotToken() {
+//        return "";
+//    }
 
     public void dailyPriceCheck() {
         List<XboxGoldPrice> actualPrice = collectInfo();

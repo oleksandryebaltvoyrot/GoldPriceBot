@@ -16,9 +16,7 @@ public class Main {
         TelegramBotsApi botsApi = new TelegramBotsApi();
 
         try {
-
             botsApi.registerBot(new GoldPriceBot());
-            botsApi.registerBot(new WebhookBot());
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             Runnable task = () -> new GoldPriceBot().dailyPriceCheck();
 
