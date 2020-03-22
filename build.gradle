@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'gold-price-bot'
@@ -11,6 +12,9 @@ repositories {
     mavenCentral()
 }
 
+application {
+    mainClassName = 'bot.Main'
+}
 
 dependencies {
     compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.3.0'
