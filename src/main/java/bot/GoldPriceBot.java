@@ -16,7 +16,8 @@ public class GoldPriceBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         // We check if the update has a message and the message has text
-        if (update.hasMessage() && update.getMessage().getText().contains("gold")) {
+        if (update.hasMessage() && update.getMessage().getText().toLowerCase()
+                .contains("gold")) {
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                     .setChatId(update.getMessage().getChatId())
                     .setText(getStoredGoldPriceAsString());
@@ -26,7 +27,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
         }
-        if (update.hasMessage() && update.getMessage().getText().contains("check")) {
+        if (update.hasMessage() && update.getMessage().getText().toLowerCase().contains("check")) {
             dailyPriceCheck();
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                     .setChatId(update.getMessage().getChatId())
@@ -39,7 +40,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
         }
     }
 
-        @Override
+    @Override
     public String getBotUsername() {
         return System.getenv("username");
     }
