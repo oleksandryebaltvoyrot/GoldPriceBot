@@ -1,6 +1,7 @@
 package bot;
 
 import models.XboxGoldPrice;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -8,6 +9,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -74,8 +77,15 @@ public class GoldPriceBot extends TelegramLongPollingBot {
     public boolean dailyPriceCheck() {
         List<XboxGoldPrice> actualPrice = collectInfo();
         String superMessage;
+
         logger.info("actual price: " + Arrays.toString(actualPrice.toArray()));
+        try {
+            logger.info(FileUtils.readFileToString(new File("src/main/resources/storage.txt"), StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
         logger.info("storage price: " + Arrays.toString(getPriceFromStorage().toArray()));
+
         if (!actualPrice.equals(getPriceFromStorage())) {
             cleanUpStorage();
             storePrice(actualPrice);
