@@ -5,9 +5,9 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import utils.XboxNowHelper;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static services.StorageService.*;
 import static utils.XboxNowHelper.collectInfo;
@@ -50,6 +50,10 @@ public class GoldPriceBot extends TelegramLongPollingBot {
         return System.getenv("token");
     }
 
+    public String getChatList() {
+        return System.getenv("CHAT_LIST"); //117209127
+    }
+
 //    @Override
 //    public String getBotUsername() {
 //        return "GoldPriceBot";
@@ -62,20 +66,21 @@ public class GoldPriceBot extends TelegramLongPollingBot {
 
     public void dailyPriceCheck() {
         List<XboxGoldPrice> actualPrice = collectInfo();
-        List<XboxGoldPrice> storedPrice = getPriceFromStorage();
-        try {
-            String superMessage;
-            if (!actualPrice.equals(storedPrice)) {
-                cleanUpStorage();
-                XboxNowHelper.storePrice(actualPrice);
-                superMessage = "Price is changed \n \n";
+        String superMessage;
+        if (!actualPrice.equals(getPriceFromStorage())) {
+            cleanUpStorage();
+            storePrice(actualPrice);
+            superMessage = "Price is changed \n \n";
+            Stream.of(getChatList().split(",")).forEach(user -> {
                 SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                        .setChatId("117209127")
+                        .setChatId(user)
                         .setText(superMessage + getStoredGoldPriceAsString());
-                execute(message);
-            }
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
+                try {
+                    execute(message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 }

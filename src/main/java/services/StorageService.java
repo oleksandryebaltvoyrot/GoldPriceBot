@@ -77,4 +77,7 @@ public class StorageService {
         }
     }
 
+    public static void storePrice(List<XboxGoldPrice> list) {
+        list.forEach(StorageService::addPriceToStorage);
+    }
 }

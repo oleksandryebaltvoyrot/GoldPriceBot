@@ -73,8 +73,5 @@ public class XboxNowHelper {
                 .collect(Collectors.joining(", \n"));
     }
 
-    public static void storePrice(List<XboxGoldPrice> list) {
-        list.forEach(StorageService::addPriceToStorage);
-    }
 
 }
