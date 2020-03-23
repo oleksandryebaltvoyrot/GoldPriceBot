@@ -89,7 +89,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
         if (!actualPrice.equals(getPriceFromStorage())) {
             cleanUpStorage();
             storePrice(actualPrice);
-            superMessage = "Price were changed \n \n";
+            superMessage = "Price was changed \n \n";
             Stream.of(getChatList().split(",")).forEach(user -> {
                 SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                         .setChatId(user)
