@@ -1,9 +1,7 @@
 package utils;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import enums.Frequency;
+import enums.XboxNowFrequency;
 import models.XboxGoldPrice;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -13,14 +11,13 @@ import org.apache.logging.log4j.Logger;
 import services.StorageService;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class XboxNowHelper {
@@ -37,42 +34,37 @@ public class XboxNowHelper {
         logger.info(request);
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
-        logger.info(responseBody.trim().substring(0, 100));
+        logger.info(responseBody.trim().substring(0, 300));
         return responseBody;
     }
 
-    private static String extractAllGroups(String text, Frequency pattern) throws InterruptedException {
-        logger.info("start looking for {}", pattern.name());
-        Pattern p = Pattern.compile("Original Price:(.)GBP");
-        Matcher matcher = p.matcher(text);
+    private static List<XboxGoldPrice> extractAllGroups(String text) {
+        logger.info("start looking for");
+        Pattern p = Pattern.compile("title=\"UK\".*Original Price:(.*)GBP.*Original Price:(.*)GBP.*Original Price:(.*)GBP");
+        Matcher matcher = p.matcher(text.trim().replace("\n", "").replace("\r", ""));
         if (matcher.find()) {
-            return matcher.group(pattern.getRegexp());
+            return Stream.of(XboxNowFrequency.values())
+                    .map(frequency -> new XboxGoldPrice()
+                            .setFrequency(frequency.name())
+                            .setPrice(matcher.group(frequency.getRegexp())+"GPB"))
+                    .collect(Collectors.toList());
         }
-        Thread.sleep(1000);
-        collectInfo();
-        logger.info("{}::price not found", pattern.name());
-        return "error";
+        logger.info("price not found");
+        return null;
     }
 
     public static List<XboxGoldPrice> collectInfo() {
-        List<XboxGoldPrice> map = new ArrayList<>();
         logger.info("start collecting info");
         try {
             String out = run(url);
             if (out.length() > 350000) {
                 out = out.substring(350000);
-            } else {
-                collectInfo();
             }
-            for (Frequency frq : Frequency.values()) {
-                map.add(new XboxGoldPrice()
-                        .setFrequency(frq.name())
-                        .setPrice(extractAllGroups(out, frq)));
-            }
-        } catch (IOException | InterruptedException | URISyntaxException | UnirestException e) {
+            return extractAllGroups(out);
+        } catch (IOException | URISyntaxException | UnirestException e) {
             e.printStackTrace();
         }
-        return map;
+        return null;
     }
 
     public String mapToString(Map<String, String> map) {

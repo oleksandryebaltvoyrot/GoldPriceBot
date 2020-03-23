@@ -52,7 +52,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
 
 //    @Override
 //    public String getBotUsername() {
-//        return "";
+//        return "GoldPriceBot";
 //    }
 //
 //    @Override
