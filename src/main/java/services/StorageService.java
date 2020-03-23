@@ -83,7 +83,9 @@ public class StorageService {
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
-        return out.toString().replace("::", EmojiParser.parseToUnicode(":heavy_multiplication_x:"));
+        return out.toString()
+                .replace("::", String.format(" %s ", EmojiParser.parseToUnicode(":heavy_multiplication_x:")))
+                .replace("-GBP",String.format(" %s",EmojiParser.parseToUnicode(":pound:")));
     }
 
     public static void cleanUpStorage() {

@@ -43,7 +43,7 @@ public class XboxNowHelper {
             return Stream.of(XboxNowFrequency.values())
                     .map(frequency -> new XboxGoldPrice()
                             .setFrequency(frequency.name())
-                            .setPrice(matcher.group(frequency.getRegexp()).trim() + "-GPB"))
+                            .setPrice(matcher.group(frequency.getRegexp()).trim() + "-GBP"))
                     .collect(Collectors.toList());
         }
         logger.info("price not found");
