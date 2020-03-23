@@ -1,5 +1,8 @@
 package utils;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import enums.Frequency;
 import models.XboxGoldPrice;
 import okhttp3.OkHttpClient;
@@ -25,10 +28,16 @@ public class MarketplaysHelper {
     private static String url = "https://www.microsoft.com/en-us/p/xbox-live-gold/cfq7ttc0k5dj";
     private static OkHttpClient client = new OkHttpClient();
 
-    private static String run(String url) throws IOException, URISyntaxException {
+    private static String run(String url) throws IOException, URISyntaxException, UnirestException {
+
+        HttpResponse<String> response1 = Unirest.get(url)
+                .header("User-Agent", "Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1").asString();
+
+
+        logger.info("Unirest : "+response1.getBody().trim());
         Request request = new Request.Builder()
                 .url(encodeUrl(url))
-                .header("User-Agent", "User-Agent: Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
+                .header("User-Agent", "Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
                 .build();
         logger.info(request);
         Response response = client.newCall(request).execute();
@@ -69,7 +78,7 @@ public class MarketplaysHelper {
                         .setFrequency(frq.name())
                         .setPrice(extractAllGroups(out, frq)));
             }
-        } catch (IOException | InterruptedException | URISyntaxException e) {
+        } catch (IOException | InterruptedException | URISyntaxException | UnirestException e) {
             e.printStackTrace();
         }
         return map;
