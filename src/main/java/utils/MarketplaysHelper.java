@@ -25,7 +25,8 @@ import java.util.stream.Collectors;
 
 public class MarketplaysHelper {
     private static final Logger logger = LogManager.getLogger(MarketplaysHelper.class);
-    private static String url = "https://www.microsoft.com/en-us/p/xbox-live-gold/cfq7ttc0k5dj?WT.mc_id=CNavGamesXboxLiveGold";
+    //private static String url = "https://www.microsoft.com/en-us/p/xbox-live-gold/cfq7ttc0k5dj?WT.mc_id=CNavGamesXboxLiveGold";
+    private static String url = "https://donate.wikimedia.org/w/index.php?title=Special:LandingPage&country=UA&uselang=de&utm_medium=sidebar&utm_source=donate&utm_campaign=C13_de.wikipedia.org";
     private static OkHttpClient client = new OkHttpClient();
 
     private static String run(String url) throws IOException, URISyntaxException, UnirestException {
