@@ -21,7 +21,7 @@ import static utils.XboxNowHelper.collectInfo;
 
 public class GoldPriceBot extends TelegramLongPollingBot {
     private static final Logger logger = LogManager.getLogger(GoldPriceBot.class);
-    private String unicornEmoji = EmojiParser.parseToUnicode(":unicorn:");
+    private String dragonFaceEmoji = EmojiParser.parseToUnicode(":dragon_face:");
     private String dollarEmoji = EmojiParser.parseToUnicode(":dollar:");
     private String moneyEmoji = EmojiParser.parseToUnicode(":moneybag:");
 
@@ -79,7 +79,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
 
     public boolean dailyPriceCheck() {
         List<XboxGoldPrice> actualPrice = collectInfo();
-        String superMessage;
+        String headerMessage;
 
         logger.info("actual price: " + Arrays.toString(actualPrice.toArray()));
         try {
@@ -92,11 +92,11 @@ public class GoldPriceBot extends TelegramLongPollingBot {
         if (!actualPrice.equals(getPriceFromStorage())) {
             cleanUpStorage();
             storePrice(actualPrice);
-            superMessage = unicornEmoji + dollarEmoji + " <b>Price was changed<b> " + moneyEmoji + " \n \n";
+            headerMessage = String.format("%s %s Price was changed %s %s", dragonFaceEmoji, dollarEmoji, moneyEmoji, " \n \n");
             Stream.of(getChatList().split(",")).forEach(user -> {
                 SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                         .setChatId(user)
-                        .setText(superMessage + getFormattedStoredGoldPriceAsString());
+                        .setText(headerMessage + getFormattedStoredGoldPriceAsString());
                 try {
                     execute(message);
                 } catch (TelegramApiException e) {
