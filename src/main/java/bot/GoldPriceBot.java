@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import utils.MarketplaysHelper;
+import utils.XboxNowHelper;
 
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
             String superMessage;
             if (!actualPrice.equals(storedPrice)) {
                 cleanUpStorage();
-                MarketplaysHelper.storePrice(actualPrice);
+                XboxNowHelper.storePrice(actualPrice);
                 superMessage = "Price is changed \n \n";
                 SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                         .setChatId("117209127")
