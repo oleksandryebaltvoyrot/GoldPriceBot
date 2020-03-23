@@ -21,9 +21,9 @@ import static utils.XboxNowHelper.collectInfo;
 
 public class GoldPriceBot extends TelegramLongPollingBot {
     private static final Logger logger = LogManager.getLogger(GoldPriceBot.class);
-    private String smile_emoji = EmojiParser.parseToUnicode(":smiley:");
-    private String share_number_emoji = EmojiParser.parseToUnicode(":phone:");
-    private String money_emoji = EmojiParser.parseToUnicode(":moneybag:");
+    private String unicornEmoji = EmojiParser.parseToUnicode(":unicorn:");
+    private String dollarEmoji = EmojiParser.parseToUnicode(":dollar:");
+    private String moneyEmoji = EmojiParser.parseToUnicode(":moneybag:");
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -32,7 +32,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
                 .contains("gold")) {
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                     .setChatId(update.getMessage().getChatId())
-                    .setText(getStoredGoldPriceAsString());
+                    .setText(getFormattedStoredGoldPriceAsString());
             try {
                 execute(message); // Call method to send the message
             } catch (TelegramApiException e) {
@@ -43,7 +43,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
             if (!dailyPriceCheck()) {
                 SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                         .setChatId(update.getMessage().getChatId())
-                        .setText(getStoredGoldPriceAsString());
+                        .setText(getFormattedStoredGoldPriceAsString());
                 try {
                     execute(message); // Call method to send the message
                 } catch (TelegramApiException e) {
@@ -92,11 +92,11 @@ public class GoldPriceBot extends TelegramLongPollingBot {
         if (!actualPrice.equals(getPriceFromStorage())) {
             cleanUpStorage();
             storePrice(actualPrice);
-            superMessage = money_emoji + " **Price was changed** " + money_emoji + " \n \n";
+            superMessage = unicornEmoji + dollarEmoji + " <b>Price was changed<b> " + moneyEmoji + " \n \n";
             Stream.of(getChatList().split(",")).forEach(user -> {
                 SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                         .setChatId(user)
-                        .setText(superMessage + getStoredGoldPriceAsString());
+                        .setText(superMessage + getFormattedStoredGoldPriceAsString());
                 try {
                     execute(message);
                 } catch (TelegramApiException e) {

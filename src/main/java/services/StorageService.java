@@ -1,6 +1,7 @@
 package services;
 
 
+import com.vdurmont.emoji.EmojiParser;
 import models.XboxGoldPrice;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +68,22 @@ public class StorageService {
             LOGGER.error(e.getMessage());
         }
         return out.toString();
+    }
+
+    public static String getFormattedStoredGoldPriceAsString() {
+        File file = new File(FILE_PATH);
+        StringBuilder out = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String st;
+            while ((st = br.readLine()) != null) {
+                out.append(EmojiParser.parseToUnicode(":white_check_mark:")).append(st);
+                out.append("\n");
+            }
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return out.toString().replace("::", EmojiParser.parseToUnicode(":heavy_multiplication_x:"));
     }
 
     public static void cleanUpStorage() {
