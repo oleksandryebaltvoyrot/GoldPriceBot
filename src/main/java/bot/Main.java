@@ -22,7 +22,7 @@ public class Main {
 
         try {
             botsApi.registerBot(new GoldPriceBot());
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
             Runnable task = () -> {
                 try {
                     new GoldPriceBot().sendPriceChangedMessage("test");
@@ -39,8 +39,8 @@ public class Main {
 
         int serverPort = Integer.parseInt(System.getenv("PORT"));
         HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
-        server.createContext("/api/hello", (exchange -> {
-            String respText = "Hello!";
+        server.createContext("/", (exchange -> {
+            String respText = "I'm working!";
             exchange.sendResponseHeaders(200, respText.getBytes().length);
             OutputStream output = exchange.getResponseBody();
             output.write(respText.getBytes());
