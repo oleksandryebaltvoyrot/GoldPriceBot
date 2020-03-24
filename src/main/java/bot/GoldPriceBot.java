@@ -1,6 +1,5 @@
 package bot;
 
-import com.vdurmont.emoji.EmojiParser;
 import enums.SimpleMessages;
 import enums.Storage;
 import models.XboxGoldPrice;
@@ -10,6 +9,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import utils.Emoji;
 
 import java.io.IOException;
 import java.util.*;
@@ -20,10 +20,6 @@ import static utils.XboxNowHelper.*;
 
 public class GoldPriceBot extends TelegramLongPollingBot {
     private static final Logger logger = LogManager.getLogger(GoldPriceBot.class);
-    private String dragonFaceEmoji = EmojiParser.parseToUnicode(":dragon_face:");
-    private String dollarEmoji = EmojiParser.parseToUnicode(":dollar:");
-    private String moneyEmoji = EmojiParser.parseToUnicode(":moneybag:");
-    private String worried = EmojiParser.parseToUnicode(":worried:");
 
     @Override
     public String getBotUsername() {
@@ -74,7 +70,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
                 try {
                     Set<Storage> subscriptionsWithoutChanges = dailyPriceCheck();
                     subscriptionsWithoutChanges.forEach(subscription ->
-                            sendPriceMessage(userId, "There is nothing new " + worried, getFormattedPriceAsString(subscription)));
+                            sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, getFormattedPriceAsString(subscription)));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -83,7 +79,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
     }
 
     private void sendPriceChangedMessage(String price) {
-        final String headerMessage = String.format("%s %s Price was changed %s", dragonFaceEmoji, dollarEmoji, moneyEmoji);
+        final String headerMessage = String.format("%s Price wa$ changed %s", Emoji.ROTATING_LIGHT, Emoji.ROTATING_LIGHT);
         Stream.of(getChatList().split(","))
                 .forEach(user -> sendPriceMessage(user, headerMessage, price));
     }
