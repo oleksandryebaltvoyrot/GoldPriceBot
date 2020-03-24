@@ -12,17 +12,6 @@ repositories {
     mavenCentral()
 }
 
-task fatJar(type: Jar) {
-    manifest {
-        attributes(
-                'Main-Class': 'bot.Main'
-        )
-    }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
 configurations {
     // configuration that holds jars to include in the jar
     extraLibs
