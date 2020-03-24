@@ -23,6 +23,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
     private String dragonFaceEmoji = EmojiParser.parseToUnicode(":dragon_face:");
     private String dollarEmoji = EmojiParser.parseToUnicode(":dollar:");
     private String moneyEmoji = EmojiParser.parseToUnicode(":moneybag:");
+    private String worried = EmojiParser.parseToUnicode(":worried:");
 
     @Override
     public String getBotUsername() {
@@ -73,7 +74,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
                 try {
                     Set<Storage> subscriptionsWithoutChanges = dailyPriceCheck();
                     subscriptionsWithoutChanges.forEach(subscription ->
-                            sendPriceMessage(userId, "There is nothing new", getFormattedPriceAsString(subscription)));
+                            sendPriceMessage(userId, "There is nothing new " + worried, getFormattedPriceAsString(subscription)));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
