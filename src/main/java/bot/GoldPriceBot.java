@@ -23,33 +23,33 @@ import static utils.XboxNowHelper.*;
 public class GoldPriceBot extends TelegramLongPollingBot {
     private static final Logger logger = LogManager.getLogger(GoldPriceBot.class);
 
-//    @Override
-//    public String getBotUsername() {
-//        return System.getenv("username");
-//    }
-//
-//    @Override
-//    public String getBotToken() {
-//        return System.getenv("token");
-//    }
-//
-//    public String getChatList() {
-//        return System.getenv("CHAT_LIST");
-//    }
-
     @Override
     public String getBotUsername() {
-        return "GoldenBoy";
+        return System.getenv("username");
     }
 
     @Override
     public String getBotToken() {
-        return "356162982:AAGFOsyBumDpMw0nUiSw3pg7WCejrmT0SvA";
+        return System.getenv("token");
     }
 
     public String getChatList() {
-        return "117209127";
+        return System.getenv("CHAT_LIST");
     }
+
+//    @Override
+//    public String getBotUsername() {
+//        return "GoldenBoy";
+//    }
+//
+//    @Override
+//    public String getBotToken() {
+//        return "";
+//    }
+//
+//    public String getChatList() {
+//        return "";
+//    }
 
     @Override
     public void onUpdateReceived(Update update) {
