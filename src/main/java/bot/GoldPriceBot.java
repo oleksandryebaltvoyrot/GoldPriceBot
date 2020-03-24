@@ -3,8 +3,9 @@ package bot;
 import enums.SimpleMessages;
 import enums.Storage;
 import models.XboxGoldPrice;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
 import static services.StorageService.*;
 import static utils.XboxNowHelper.*;
 
+@Component
 public class GoldPriceBot extends TelegramLongPollingBot {
     private static final Logger logger = LogManager.getLogger(GoldPriceBot.class);
 

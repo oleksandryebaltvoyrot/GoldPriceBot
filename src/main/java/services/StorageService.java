@@ -4,8 +4,8 @@ package services;
 import com.vdurmont.emoji.EmojiParser;
 import enums.Storage;
 import models.XboxGoldPrice;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -16,12 +16,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static enums.Storage.GOLD_FILE_PATH;
+
 public class StorageService {
     private static final Logger LOGGER = LogManager.getLogger(StorageService.class);
-
-    private static final String GOLD_FILE_PATH = "src/main/resources/gold_storage.txt";
-    private static final String PASS_FILE_PATH = "src/main/resources/pass_storage.txt";
-    private static final String ULTIMATE_FILE_PATH = "src/main/resources/ultimate_storage.txt";
     private static final Pattern PRICE_PATTERN = Pattern.compile("(\\S+)::(\\S+)");
 
     public static void addPriceToStorage(XboxGoldPrice user, String storage) {
@@ -31,7 +29,7 @@ public class StorageService {
             bw.write(user.toString());
             bw.newLine();
             bw.close();
-            LOGGER.info("Price {} added", user.toString());
+            LOGGER.info("Price {" + user.toString() + "} added");
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
@@ -58,7 +56,7 @@ public class StorageService {
     }
 
     public static String getStoredGoldPriceAsString() {
-        File file = new File(GOLD_FILE_PATH);
+        File file = new File(GOLD_FILE_PATH.getStoragePath());
         StringBuilder out = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
