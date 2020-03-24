@@ -37,7 +37,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
     }
 
     public String getChatList() {
-        return System.getenv("CHAT_LIST"); //117209127
+        return System.getenv("CHAT_LIST");
     }
 
 //    @Override
@@ -63,6 +63,30 @@ public class GoldPriceBot extends TelegramLongPollingBot {
                     .setChatId(update.getMessage().getChatId())
                     .setText(getFormattedPriceAsString(Storage.GOLD_FILE_PATH));
             logger.info(getFormattedPriceAsString(Storage.GOLD_FILE_PATH));
+            try {
+                execute(message); // Call method to send the message
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+        if (update.hasMessage() && update.getMessage().getText().toLowerCase()
+                .contains("ultimate")) {
+            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+                    .setChatId(update.getMessage().getChatId())
+                    .setText(getFormattedPriceAsString(Storage.ULTIMATE_FILE_PATH));
+            logger.info(getFormattedPriceAsString(Storage.ULTIMATE_FILE_PATH));
+            try {
+                execute(message); // Call method to send the message
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+        if (update.hasMessage() && update.getMessage().getText().toLowerCase()
+                .contains("game_pass")) {
+            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+                    .setChatId(update.getMessage().getChatId())
+                    .setText(getFormattedPriceAsString(Storage.PASS_FILE_PATH));
+            logger.info(getFormattedPriceAsString(Storage.PASS_FILE_PATH));
             try {
                 execute(message); // Call method to send the message
             } catch (TelegramApiException e) {
@@ -104,21 +128,20 @@ public class GoldPriceBot extends TelegramLongPollingBot {
                 });
     }
 
-
     public Set<Storage> dailyPriceCheck() throws IOException {
-        HashMap<Storage, List<XboxGoldPrice>> items = new HashMap<>();
-        items.put(Storage.PASS_FILE_PATH, Collections.singletonList(extractGamePassPrice()));
-        items.put(Storage.ULTIMATE_FILE_PATH, Collections.singletonList(extractGameUltimatePrice()));
-        items.put(Storage.GOLD_FILE_PATH, extractGoldPrice());
+        HashMap<Storage, List<XboxGoldPrice>> subscriptionsList = new HashMap<>();
+        subscriptionsList.put(Storage.PASS_FILE_PATH, Collections.singletonList(extractGamePassPrice()));
+        subscriptionsList.put(Storage.ULTIMATE_FILE_PATH, Collections.singletonList(extractGameUltimatePrice()));
+        subscriptionsList.put(Storage.GOLD_FILE_PATH, extractGoldPrice());
 
-        items.keySet().forEach(path -> {
-            if (!items.get(path).equals(getPriceFromStorage(path))) {
-                cleanUpStorage(path);
-                storePrice(items.get(path), path);
-                sendPriceChangedMessage(getFormattedPriceAsString(path));
-                items.remove(path);
+        subscriptionsList.keySet().forEach(subscription -> {
+            if (!subscriptionsList.get(subscription).equals(getPriceFromStorage(subscription))) {
+                cleanUpStorage(subscription);
+                storePrice(subscriptionsList.get(subscription), subscription);
+                sendPriceChangedMessage(getFormattedPriceAsString(subscription));
+                subscriptionsList.remove(subscription);
             }
         });
-        return items.keySet();
+        return subscriptionsList.keySet();
     }
 }
