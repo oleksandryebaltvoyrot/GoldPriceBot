@@ -3,8 +3,6 @@ package bot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.telegram.telegrambots.ApiContextInitializer;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -18,14 +16,14 @@ public class Main {
         ApiContextInitializer.init();
         SpringApplication.run(Main.class, args);
 
-//        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-//        Runnable task = () -> {
-//            try {
-//                new GoldPriceBot().dailyPriceCheck();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        };
-//        executor.scheduleWithFixedDelay(task, 0, 10, TimeUnit.HOURS);
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        Runnable task = () -> {
+            try {
+                new GoldPriceBot().dailyPriceCheck();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+        executor.scheduleWithFixedDelay(task, 0, 10, TimeUnit.MINUTES);
     }
 }
