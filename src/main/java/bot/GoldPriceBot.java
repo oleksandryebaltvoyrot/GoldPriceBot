@@ -57,75 +57,34 @@ public class GoldPriceBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         // We check if the update has a message and the message has text
-        if (update.hasMessage() && update.getMessage().getText().toLowerCase()
-                .contains("gold")) {
-            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                    .setChatId(update.getMessage().getChatId())
-                    .setText(getFormattedPriceAsString(Storage.GOLD_FILE_PATH));
-            logger.info(getFormattedPriceAsString(Storage.GOLD_FILE_PATH));
-            try {
-                execute(message); // Call method to send the message
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
+        if (update.hasMessage()) {
+            String request = update.getMessage().getText().toLowerCase();
+            String userId = update.getMessage().getChatId().toString();
+            if (request.contains("gold")) {
+                sendPriceMessage(userId, "Here is your GOLD", getFormattedPriceAsString(Storage.GOLD_FILE_PATH));
             }
-        }
-        if (update.hasMessage() && update.getMessage().getText().toLowerCase()
-                .contains("ultimate")) {
-            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                    .setChatId(update.getMessage().getChatId())
-                    .setText(getFormattedPriceAsString(Storage.ULTIMATE_FILE_PATH));
-            logger.info(getFormattedPriceAsString(Storage.ULTIMATE_FILE_PATH));
-            try {
-                execute(message); // Call method to send the message
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
+            if (request.contains("ultimate")) {
+                sendPriceMessage(userId, "Your Big Mac, Cola and ULTIMATE", getFormattedPriceAsString(Storage.ULTIMATE_FILE_PATH));
             }
-        }
-        if (update.hasMessage() && update.getMessage().getText().toLowerCase()
-                .contains("game_pass")) {
-            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                    .setChatId(update.getMessage().getChatId())
-                    .setText(getFormattedPriceAsString(Storage.PASS_FILE_PATH));
-            logger.info(getFormattedPriceAsString(Storage.PASS_FILE_PATH));
-            try {
-                execute(message); // Call method to send the message
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
+            if (request.contains("game_pass")) {
+                sendPriceMessage(userId, "GAME PASS for you", getFormattedPriceAsString(Storage.PASS_FILE_PATH));
             }
-        }
-        if (update.hasMessage() && update.getMessage().getText().toLowerCase().contains("check")) {
-            try {
-                dailyPriceCheck().forEach(path -> {
-                    SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                            .setChatId(update.getMessage().getChatId())
-                            .setText(getFormattedPriceAsString(path));
-                    try {
-                        execute(message);
-                        logger.info(message);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (request.contains("check")) {
+                try {
+                    Set<Storage> subscriptionsWithoutChanges = dailyPriceCheck();
+                    subscriptionsWithoutChanges.forEach(subscription ->
+                            sendPriceMessage(userId, "There is nothing new", getFormattedPriceAsString(subscription)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     private void sendPriceChangedMessage(String price) {
-        final String headerMessage = String.format("%s %s Price was changed %s %s", dragonFaceEmoji, dollarEmoji, moneyEmoji, " \n \n");
+        final String headerMessage = String.format("%s %s Price was changed %s", dragonFaceEmoji, dollarEmoji, moneyEmoji);
         Stream.of(getChatList().split(","))
-                .forEach(user -> {
-                    SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                            .setChatId(user)
-                            .setText(headerMessage + price);
-                    try {
-                        execute(message);
-                        logger.info(message);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
-                });
+                .forEach(user -> sendPriceMessage(user, headerMessage, price));
     }
 
     public Set<Storage> dailyPriceCheck() throws IOException {
@@ -143,5 +102,17 @@ public class GoldPriceBot extends TelegramLongPollingBot {
             }
         });
         return subscriptionsList.keySet();
+    }
+
+    void sendPriceMessage(String chatId, String header, String price) {
+        SendMessage message = new SendMessage()
+                .setChatId(chatId)
+                .setText(header + "\n\n" + price);
+        try {
+            execute(message);
+            logger.info(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 }
