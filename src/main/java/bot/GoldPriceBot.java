@@ -11,7 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static services.StorageService.*;
@@ -24,6 +27,34 @@ public class GoldPriceBot extends TelegramLongPollingBot {
     private String moneyEmoji = EmojiParser.parseToUnicode(":moneybag:");
 
     @Override
+    public String getBotUsername() {
+        return System.getenv("username");
+    }
+
+    @Override
+    public String getBotToken() {
+        return System.getenv("token");
+    }
+
+    public String getChatList() {
+        return System.getenv("CHAT_LIST"); //117209127
+    }
+
+//    @Override
+//    public String getBotUsername() {
+//        return "GoldenBoy";
+//    }
+//
+//    @Override
+//    public String getBotToken() {
+//        return "356162982:AAGFOsyBumDpMw0nUiSw3pg7WCejrmT0SvA";
+//    }
+//
+//    public String getChatList() {
+//        return "117209127";
+//    }
+
+    @Override
     public void onUpdateReceived(Update update) {
         // We check if the update has a message and the message has text
         if (update.hasMessage() && update.getMessage().getText().toLowerCase()
@@ -31,6 +62,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                     .setChatId(update.getMessage().getChatId())
                     .setText(getFormattedPriceAsString(Storage.GOLD_FILE_PATH));
+            logger.info(getFormattedPriceAsString(Storage.GOLD_FILE_PATH));
             try {
                 execute(message); // Call method to send the message
             } catch (TelegramApiException e) {
@@ -40,10 +72,12 @@ public class GoldPriceBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().getText().toLowerCase().contains("check")) {
             try {
                 dailyPriceCheck().forEach(path -> {
+                    SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+                            .setChatId(update.getMessage().getChatId())
+                            .setText(getFormattedPriceAsString(path));
                     try {
-                        execute(new SendMessage() // Create a SendMessage object with mandatory fields
-                                .setChatId(update.getMessage().getChatId())
-                                .setText(getFormattedPriceAsString(path)));
+                        execute(message);
+                        logger.info(message);
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
@@ -52,34 +86,6 @@ public class GoldPriceBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
         }
-    }
-
-//    @Override
-//    public String getBotUsername() {
-//        return System.getenv("username");
-//    }
-//
-//    @Override
-//    public String getBotToken() {
-//        return System.getenv("token");
-//    }
-//
-//    public String getChatList() {
-//        return System.getenv("CHAT_LIST"); //117209127
-//    }
-
-    @Override
-    public String getBotUsername() {
-        return "GoldenBoy";
-    }
-
-    @Override
-    public String getBotToken() {
-        return "356162982:AAGFOsyBumDpMw0nUiSw3pg7WCejrmT0SvA";
-    }
-
-    public String getChatList() {
-        return "117209127";
     }
 
     private void sendPriceChangedMessage(String price) {
@@ -91,6 +97,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
                             .setText(headerMessage + price);
                     try {
                         execute(message);
+                        logger.info(message);
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
