@@ -1,9 +1,12 @@
 package bot;
 
+import com.sun.net.httpserver.HttpServer;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -34,17 +37,17 @@ public class Main {
             e.printStackTrace();
         }
 
-//        int serverPort = Integer.parseInt(System.getenv("PORT"));
-//        HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
-//        server.createContext("/api/hello", (exchange -> {
-//            String respText = "Hello!";
-//            exchange.sendResponseHeaders(200, respText.getBytes().length);
-//            OutputStream output = exchange.getResponseBody();
-//            output.write(respText.getBytes());
-//            output.flush();
-//            exchange.close();
-//        }));
-//        server.setExecutor(null); // creates a default executor
-//        server.start();
+        int serverPort = Integer.parseInt(System.getenv("PORT"));
+        HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
+        server.createContext("/api/hello", (exchange -> {
+            String respText = "Hello!";
+            exchange.sendResponseHeaders(200, respText.getBytes().length);
+            OutputStream output = exchange.getResponseBody();
+            output.write(respText.getBytes());
+            output.flush();
+            exchange.close();
+        }));
+        server.setExecutor(null); // creates a default executor
+        server.start();
     }
 }
