@@ -18,14 +18,14 @@ public class Main {
         ApiContextInitializer.init();
         SpringApplication.run(Main.class, args);
 
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        Runnable task = () -> {
-            try {
-                new GoldPriceBot().dailyPriceCheck();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        };
-        executor.scheduleWithFixedDelay(task, 0, 10, TimeUnit.HOURS);
+//        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+//        Runnable task = () -> {
+//            try {
+//                new GoldPriceBot().dailyPriceCheck();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        };
+//        executor.scheduleWithFixedDelay(task, 0, 10, TimeUnit.HOURS);
     }
 }

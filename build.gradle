@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
 }
 
 group 'gold-price-bot'
