@@ -1,5 +1,8 @@
 package bot;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.telegram.telegrambots.ApiContextInitializer;
@@ -15,7 +18,8 @@ public class Main {
 
         ApiContextInitializer.init();
         SpringApplication.run(Main.class, args);
-
+        String log4jConfPath = "/log4j.properties";
+        PropertyConfigurator.configure(log4jConfPath);
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         Runnable task = () -> {
             try {
