@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import utils.Emoji;
 
 import java.io.IOException;
@@ -36,18 +35,18 @@ public class GoldPriceBot extends TelegramLongPollingBot {
     }
 
 //    @Override
-//    public String getBotUsername() {
-//        return "GoldenBoy";
-//    }
-//
-//    @Override
-//    public String getBotToken() {
-//        return "356162982:AAGFOsyBumDpMw0nUiSw3pg7WCejrmT0SvA";
-//    }
-//
-//    public String getChatList() {
-//        return "117209127";
-//    }
+////    public String getBotUsername() {
+////        return "GoldenBoy";
+////    }
+////
+////    @Override
+////    public String getBotToken() {
+////        return "356162982:AAGFOsyBumDpMw0nUiSw3pg7WCejrmT0SvA";
+////    }
+////
+////    public String getChatList() {
+////        return "117209127";
+////    }
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -108,7 +107,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
         try {
             execute(message);
             logger.info(message);
-        } catch (TelegramApiException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

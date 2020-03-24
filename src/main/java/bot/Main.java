@@ -2,7 +2,6 @@ package bot;
 
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -29,7 +28,7 @@ public class Main {
             };
 
             executor.scheduleWithFixedDelay(task, 0, 2, TimeUnit.MINUTES);
-        } catch (TelegramApiException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
