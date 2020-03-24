@@ -1,6 +1,7 @@
 package bot;
 
 import com.vdurmont.emoji.EmojiParser;
+import enums.SimpleMessages;
 import enums.Storage;
 import models.XboxGoldPrice;
 import org.apache.logging.log4j.LogManager;
@@ -11,10 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static services.StorageService.*;
@@ -60,14 +58,16 @@ public class GoldPriceBot extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             String request = update.getMessage().getText().toLowerCase();
             String userId = update.getMessage().getChatId().toString();
-            if (request.contains("gold")) {
-                sendPriceMessage(userId, "Here is your GOLD", getFormattedPriceAsString(Storage.GOLD_FILE_PATH));
+            Random rand = new Random();
+            String header = Arrays.asList(SimpleMessages.values()).get(rand.nextInt(SimpleMessages.values().length)).getMessage();
+            if (request.contains(Storage.GOLD_FILE_PATH.getStorageName())) {
+                sendPriceMessage(userId, String.format(header, Storage.GOLD_FILE_PATH.getStorageName().toUpperCase()), getFormattedPriceAsString(Storage.GOLD_FILE_PATH));
             }
             if (request.contains("ultimate")) {
-                sendPriceMessage(userId, "Your Big Mac, Cola and ULTIMATE", getFormattedPriceAsString(Storage.ULTIMATE_FILE_PATH));
+                sendPriceMessage(userId, String.format(header, Storage.ULTIMATE_FILE_PATH.getStorageName().toUpperCase()), getFormattedPriceAsString(Storage.ULTIMATE_FILE_PATH));
             }
             if (request.contains("game_pass")) {
-                sendPriceMessage(userId, "GAME PASS for you", getFormattedPriceAsString(Storage.PASS_FILE_PATH));
+                sendPriceMessage(userId, String.format(header, Storage.PASS_FILE_PATH.getStorageName().toUpperCase()), getFormattedPriceAsString(Storage.PASS_FILE_PATH));
             }
             if (request.contains("check")) {
                 try {

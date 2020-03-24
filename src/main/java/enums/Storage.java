@@ -1,16 +1,22 @@
 package enums;
 
 public enum Storage {
-    GOLD_FILE_PATH("src/main/resources/gold_storage.txt"),
-    PASS_FILE_PATH("src/main/resources/pass_storage.txt"),
-    ULTIMATE_FILE_PATH("src/main/resources/ultimate_storage.txt");
-    private final String path;
+    GOLD_FILE_PATH("src/main/resources/gold_storage.txt", "gold"),
+    PASS_FILE_PATH("src/main/resources/pass_storage.txt", "game_pass"),
+    ULTIMATE_FILE_PATH("src/main/resources/ultimate_storage.txt", "ultimate");
+    private final String storagePath;
+    private final String storageName;
 
-    Storage(String regexp) {
-        this.path = regexp;
+    Storage(String storagePath, String storageName) {
+        this.storagePath = storagePath;
+        this.storageName = storageName;
     }
 
-    public String getPath() {
-        return path;
+    public String getStoragePath() {
+        return storagePath;
+    }
+
+    public String getStorageName() {
+        return storageName;
     }
 }

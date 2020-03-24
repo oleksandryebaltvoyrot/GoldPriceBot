@@ -39,7 +39,7 @@ public class StorageService {
 
     public static List<XboxGoldPrice> getPriceFromStorage(Storage storage) {
         List<XboxGoldPrice> users = new ArrayList<>();
-        File file = new File(storage.getPath());
+        File file = new File(storage.getStoragePath());
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String st;
@@ -74,7 +74,7 @@ public class StorageService {
     }
 
     public static String getFormattedPriceAsString(Storage storage) {
-        File file = new File(storage.getPath());
+        File file = new File(storage.getStoragePath());
         StringBuilder out = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -93,13 +93,13 @@ public class StorageService {
 
     public static void cleanUpStorage(Storage storage) {
         try {
-            FileChannel.open(Paths.get(storage.getPath()), StandardOpenOption.WRITE).truncate(0).close();
+            FileChannel.open(Paths.get(storage.getStoragePath()), StandardOpenOption.WRITE).truncate(0).close();
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
     }
 
     public static void storePrice(List<XboxGoldPrice> list, Storage storage) {
-        list.forEach(goldPrice -> addPriceToStorage(goldPrice, storage.getPath()));
+        list.forEach(goldPrice -> addPriceToStorage(goldPrice, storage.getStoragePath()));
     }
 }
