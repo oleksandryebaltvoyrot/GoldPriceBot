@@ -36,23 +36,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                new GoldPriceBot().sendPriceChangedMessage("test" + Thread.currentThread().getName());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-
         int serverPort = Integer.parseInt(System.getenv("PORT"));
         HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
         server.createContext("/", (exchange -> {
@@ -61,10 +44,10 @@ public class Main {
             OutputStream output = exchange.getResponseBody();
             output.write(respText.getBytes());
             output.flush();
+            new GoldPriceBot().sendPriceChangedMessage("test" + Thread.currentThread().getName());
             exchange.close();
         }));
         server.setExecutor(null); // creates a default executor
         server.start();
-
     }
 }
