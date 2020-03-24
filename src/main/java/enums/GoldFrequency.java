@@ -1,13 +1,13 @@
 package enums;
 
-public enum XboxNowFrequency {
+public enum GoldFrequency {
     MONTH(3),
     THREE(2),
     YEAR1(1);
 
     private final int regexp;
 
-    XboxNowFrequency(int regexp) {
+    GoldFrequency(int regexp) {
         this.regexp = regexp;
     }
 

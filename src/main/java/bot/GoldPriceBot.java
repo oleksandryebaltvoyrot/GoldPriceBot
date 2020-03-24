@@ -1,8 +1,8 @@
 package bot;
 
 import com.vdurmont.emoji.EmojiParser;
+import enums.Storage;
 import models.XboxGoldPrice;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -10,14 +10,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static services.StorageService.*;
-import static utils.XboxNowHelper.collectInfo;
+import static utils.XboxNowHelper.*;
 
 public class GoldPriceBot extends TelegramLongPollingBot {
     private static final Logger logger = LogManager.getLogger(GoldPriceBot.class);
@@ -32,7 +30,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
                 .contains("gold")) {
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                     .setChatId(update.getMessage().getChatId())
-                    .setText(getFormattedStoredGoldPriceAsString());
+                    .setText(getFormattedPriceAsString(Storage.GOLD_FILE_PATH));
             try {
                 execute(message); // Call method to send the message
             } catch (TelegramApiException e) {
@@ -40,71 +38,80 @@ public class GoldPriceBot extends TelegramLongPollingBot {
             }
         }
         if (update.hasMessage() && update.getMessage().getText().toLowerCase().contains("check")) {
-            if (!dailyPriceCheck()) {
-                SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                        .setChatId(update.getMessage().getChatId())
-                        .setText(getFormattedStoredGoldPriceAsString());
-                try {
-                    execute(message); // Call method to send the message
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
+            try {
+                dailyPriceCheck().forEach(path -> {
+                    try {
+                        execute(new SendMessage() // Create a SendMessage object with mandatory fields
+                                .setChatId(update.getMessage().getChatId())
+                                .setText(getFormattedPriceAsString(path)));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    @Override
-    public String getBotUsername() {
-        return System.getenv("username");
-    }
-
-    @Override
-    public String getBotToken() {
-        return System.getenv("token");
-    }
-
-    public String getChatList() {
-        return System.getenv("CHAT_LIST"); //117209127
-    }
-
 //    @Override
 //    public String getBotUsername() {
-//        return "GoldPriceBot";
+//        return System.getenv("username");
 //    }
 //
 //    @Override
 //    public String getBotToken() {
-//        return "";
+//        return System.getenv("token");
+//    }
+//
+//    public String getChatList() {
+//        return System.getenv("CHAT_LIST"); //117209127
 //    }
 
-    public boolean dailyPriceCheck() {
-        List<XboxGoldPrice> actualPrice = collectInfo();
-        String headerMessage;
+    @Override
+    public String getBotUsername() {
+        return "GoldenBoy";
+    }
 
-        logger.info("actual price: " + Arrays.toString(actualPrice.toArray()));
-        try {
-            logger.info(FileUtils.readFileToString(new File("src/main/resources/storage.txt"), StandardCharsets.UTF_8));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-        logger.info("storage price: " + Arrays.toString(getPriceFromStorage().toArray()));
+    @Override
+    public String getBotToken() {
+        return "356162982:AAGFOsyBumDpMw0nUiSw3pg7WCejrmT0SvA";
+    }
 
-        if (!actualPrice.equals(getPriceFromStorage())) {
-            cleanUpStorage();
-            storePrice(actualPrice);
-            headerMessage = String.format("%s %s Price was changed %s %s", dragonFaceEmoji, dollarEmoji, moneyEmoji, " \n \n");
-            Stream.of(getChatList().split(",")).forEach(user -> {
-                SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                        .setChatId(user)
-                        .setText(headerMessage + getFormattedStoredGoldPriceAsString());
-                try {
-                    execute(message);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
-            });
-            return true;
-        }
-        return false;
+    public String getChatList() {
+        return "117209127";
+    }
+
+    private void sendPriceChangedMessage(String price) {
+        final String headerMessage = String.format("%s %s Price was changed %s %s", dragonFaceEmoji, dollarEmoji, moneyEmoji, " \n \n");
+        Stream.of(getChatList().split(","))
+                .forEach(user -> {
+                    SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+                            .setChatId(user)
+                            .setText(headerMessage + price);
+                    try {
+                        execute(message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
+
+
+    public Set<Storage> dailyPriceCheck() throws IOException {
+        HashMap<Storage, List<XboxGoldPrice>> items = new HashMap<>();
+        items.put(Storage.PASS_FILE_PATH, Collections.singletonList(extractGamePassPrice()));
+        items.put(Storage.ULTIMATE_FILE_PATH, Collections.singletonList(extractGameUltimatePrice()));
+        items.put(Storage.GOLD_FILE_PATH, extractGoldPrice());
+
+        items.keySet().forEach(path -> {
+            if (!items.get(path).equals(getPriceFromStorage(path))) {
+                cleanUpStorage(path);
+                storePrice(items.get(path), path);
+                sendPriceChangedMessage(getFormattedPriceAsString(path));
+                items.remove(path);
+            }
+        });
+        return items.keySet();
     }
 }

@@ -2,6 +2,7 @@ package services;
 
 
 import com.vdurmont.emoji.EmojiParser;
+import enums.Storage;
 import models.XboxGoldPrice;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,12 +19,14 @@ import java.util.regex.Pattern;
 public class StorageService {
     private static final Logger LOGGER = LogManager.getLogger(StorageService.class);
 
-    private static final String FILE_PATH = "src/main/resources/storage.txt";
+    private static final String GOLD_FILE_PATH = "src/main/resources/gold_storage.txt";
+    private static final String PASS_FILE_PATH = "src/main/resources/pass_storage.txt";
+    private static final String ULTIMATE_FILE_PATH = "src/main/resources/ultimate_storage.txt";
     private static final Pattern PRICE_PATTERN = Pattern.compile("(\\S+)::(\\S+)");
 
-    public static void addPriceToStorage(XboxGoldPrice user) {
+    public static void addPriceToStorage(XboxGoldPrice user, String storage) {
         try {
-            FileWriter fw = new FileWriter(FILE_PATH, true);
+            FileWriter fw = new FileWriter(storage, true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(user.toString());
             bw.newLine();
@@ -34,9 +37,9 @@ public class StorageService {
         }
     }
 
-    public static List<XboxGoldPrice> getPriceFromStorage() {
+    public static List<XboxGoldPrice> getPriceFromStorage(Storage storage) {
         List<XboxGoldPrice> users = new ArrayList<>();
-        File file = new File(FILE_PATH);
+        File file = new File(storage.getPath());
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String st;
@@ -55,7 +58,7 @@ public class StorageService {
     }
 
     public static String getStoredGoldPriceAsString() {
-        File file = new File(FILE_PATH);
+        File file = new File(GOLD_FILE_PATH);
         StringBuilder out = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -70,8 +73,8 @@ public class StorageService {
         return out.toString();
     }
 
-    public static String getFormattedStoredGoldPriceAsString() {
-        File file = new File(FILE_PATH);
+    public static String getFormattedPriceAsString(Storage storage) {
+        File file = new File(storage.getPath());
         StringBuilder out = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -85,18 +88,18 @@ public class StorageService {
         }
         return out.toString()
                 .replace("::", String.format(" %s ", EmojiParser.parseToUnicode(":heavy_multiplication_x:")))
-                .replace("-GBP",String.format(" %s",EmojiParser.parseToUnicode(":pound:")));
+                .replace("-GBP", String.format(" %s", EmojiParser.parseToUnicode(":pound:")));
     }
 
-    public static void cleanUpStorage() {
+    public static void cleanUpStorage(Storage storage) {
         try {
-            FileChannel.open(Paths.get(FILE_PATH), StandardOpenOption.WRITE).truncate(0).close();
+            FileChannel.open(Paths.get(storage.getPath()), StandardOpenOption.WRITE).truncate(0).close();
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
     }
 
-    public static void storePrice(List<XboxGoldPrice> list) {
-        list.forEach(StorageService::addPriceToStorage);
+    public static void storePrice(List<XboxGoldPrice> list, Storage storage) {
+        list.forEach(goldPrice -> addPriceToStorage(goldPrice, storage.getPath()));
     }
 }
