@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) {
 
+        //heroku ps:scale worker=1 -a xboxsubscriptionchecker
+
         ApiContextInitializer.init();
 
         TelegramBotsApi botsApi = new TelegramBotsApi();
