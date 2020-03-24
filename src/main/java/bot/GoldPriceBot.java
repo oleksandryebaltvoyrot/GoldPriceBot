@@ -103,7 +103,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
     void sendPriceMessage(String chatId, String header, String price) {
         SendMessage message = new SendMessage()
                 .setChatId(chatId)
-                .setText(header + "\n\n" + price);
+                .setText(header + "\n\n" + price + Thread.currentThread().getName());
         try {
             execute(message);
             logger.info(message);

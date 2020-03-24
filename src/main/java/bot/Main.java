@@ -32,7 +32,7 @@ public class Main {
                 }
             };
 
-            executor.scheduleWithFixedDelay(task, 0, 2, TimeUnit.MINUTES);
+            executor.scheduleWithFixedDelay(task, 1, 2, TimeUnit.MINUTES);
         } catch (Exception e) {
             e.printStackTrace();
         }
