@@ -78,7 +78,7 @@ public class GoldPriceBot extends TelegramLongPollingBot {
         }
     }
 
-    private void sendPriceChangedMessage(String price) {
+    public void sendPriceChangedMessage(String price) {
         final String headerMessage = String.format("%s Price wa$ changed %s", Emoji.ROTATING_LIGHT, Emoji.ROTATING_LIGHT);
         Stream.of(getChatList().split(","))
                 .forEach(user -> sendPriceMessage(user, headerMessage, price));

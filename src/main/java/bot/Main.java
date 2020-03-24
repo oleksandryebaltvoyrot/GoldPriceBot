@@ -21,13 +21,14 @@ public class Main {
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             Runnable task = () -> {
                 try {
+                    new GoldPriceBot().sendPriceChangedMessage("test");
                     new GoldPriceBot().dailyPriceCheck();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             };
 
-            executor.scheduleWithFixedDelay(task, 0, 10, TimeUnit.HOURS);
+            executor.scheduleWithFixedDelay(task, 0, 2, TimeUnit.MINUTES);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
