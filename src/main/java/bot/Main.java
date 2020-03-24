@@ -7,11 +7,8 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -34,19 +31,25 @@ public class Main {
                 }
             };
 
-            executor.scheduleWithFixedDelay(task, 1, 2, TimeUnit.MINUTES);
+            //executor.scheduleWithFixedDelay(task, 1, 2, TimeUnit.MINUTES);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        new Thread(()-> {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    new GoldPriceBot().sendPriceChangedMessage("test" + Thread.currentThread().getName());
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            }, 0, 20000);
+                new GoldPriceBot().sendPriceChangedMessage("test" + Thread.currentThread().getName());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         });
 
 
@@ -63,6 +66,5 @@ public class Main {
         server.setExecutor(null); // creates a default executor
         server.start();
 
-        new Thread(() -> new GoldPriceBot().sendPriceChangedMessage("test" + Thread.currentThread().getName())).start();
     }
 }
