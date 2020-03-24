@@ -15,21 +15,21 @@ public class Main {
 
         TelegramBotsApi botsApi = new TelegramBotsApi();
 
-        try {
-            botsApi.registerBot(new GoldPriceBot());
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-            Runnable task = () -> {
-                try {
-                    new GoldPriceBot().sendPriceChangedMessage("test");
-                    new GoldPriceBot().dailyPriceCheck();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            };
-
-            executor.scheduleWithFixedDelay(task, 0, 2, TimeUnit.MINUTES);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            botsApi.registerBot(new GoldPriceBot());
+//            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+//            Runnable task = () -> {
+//                try {
+//                    new GoldPriceBot().sendPriceChangedMessage("test");
+//                    new GoldPriceBot().dailyPriceCheck();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            };
+//
+//            executor.scheduleWithFixedDelay(task, 0, 2, TimeUnit.MINUTES);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }
