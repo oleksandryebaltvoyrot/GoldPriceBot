@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Dserver.port=$PORT -cp target/classes/:target/dependency
+web: java -jar  $JAVA_OPTS -Dserver.port=$PORT build/libs/gold-price-bot-all-1.0-SNAPSHOT.jar
