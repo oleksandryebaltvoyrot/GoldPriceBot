@@ -2,18 +2,15 @@ package bot;
 
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-
-import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TelegramApiRequestException {
 
         ApiContextInitializer.init();
 
         TelegramBotsApi botsApi = new TelegramBotsApi();
+        botsApi.registerBot(new GoldPriceBot());
 
 //        try {
 //            botsApi.registerBot(new GoldPriceBot());
