@@ -4,8 +4,8 @@ package services;
 import com.vdurmont.emoji.EmojiParser;
 import enums.Storage;
 import models.XboxGoldPrice;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -29,7 +29,7 @@ public class StorageService {
             bw.write(user.toString());
             bw.newLine();
             bw.close();
-            LOGGER.info("Price {" + user.toString() + "} added");
+            LOGGER.info("Price {} added", user.toString());
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }

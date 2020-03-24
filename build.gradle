@@ -17,7 +17,7 @@ task stage {
 }
 
 dependencies {
-    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '2.2.5.RELEASE'
     compile group: 'org.telegram', name: 'telegrambots-spring-boot-starter', version: '4.6'
     compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.3.0'
     compile group: 'com.vdurmont', name: 'emoji-java', version: '4.0.0'
