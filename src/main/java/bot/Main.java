@@ -25,7 +25,7 @@ public class Main {
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
             Runnable task = () -> {
                 try {
-                    new GoldPriceBot().sendPriceChangedMessage("test"+ Thread.currentThread().getName());
+                    new GoldPriceBot().sendPriceChangedMessage("test" + Thread.currentThread().getName());
                     new GoldPriceBot().dailyPriceCheck();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -49,5 +49,7 @@ public class Main {
         }));
         server.setExecutor(null); // creates a default executor
         server.start();
+
+        new Thread(() -> new GoldPriceBot().sendPriceChangedMessage("test" + Thread.currentThread().getName())).start();
     }
 }
