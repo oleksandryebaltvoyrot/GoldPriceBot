@@ -33,6 +33,7 @@ jar {
 }
 
 dependencies {
+    extraLibs group: 'ca.krasnay', name: 'sqlbuilder', version: '1.2'
     extraLibs group: 'org.postgresql', name: 'postgresql', version: '42.2.11'
     extraLibs group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.3.0'
     extraLibs group: 'org.telegram', name: 'telegrambots', version: '4.4.0.1'
