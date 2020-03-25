@@ -39,7 +39,7 @@ public class Main {
                     " PRICE            DOUBLE PRECISION     NOT NULL)";
             try {
                 Connection connection = getConnection();
-                //createTable(connection, sql);
+                createTable(connection, sql);
                 insertPrice(connection, GOLD_FILE_PATH, 19.99);
                 insertOrUpdatePrice(connection, ULTIMATE_FILE_PATH, 19.99);
                 insertOrUpdatePrice(connection, GOLD_FILE_PATH, 19.99);
