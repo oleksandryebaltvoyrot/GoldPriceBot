@@ -43,7 +43,7 @@ public class PostgreSQLJDBC {
     }
 
     public static void updatePrice(Connection connection, Storage name, double price) throws SQLException {
-        String sql = String.format("UPDATE SUBSCRIPTIONS set PRICE = %s where NAME=%s;", price, name.getStorageName());
+        String sql = String.format("UPDATE SUBSCRIPTIONS SET PRICE = %s WHERE NAME = '%s';", price, name.getStorageName());
         Statement stmt = connection.createStatement();
         stmt.executeUpdate(sql);
         logger.info(sql);
@@ -51,7 +51,7 @@ public class PostgreSQLJDBC {
     }
 
     public static Double selectPrice(Connection connection, Storage name) throws SQLException {
-        String sql = String.format("SELECT PRICE FROM COMPANY WHERE NAME=%s;", name.getStorageName());
+        String sql = String.format("SELECT PRICE FROM SUBSCRIPTIONS WHERE NAME=%s;", name.getStorageName());
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(sql);
         double price = resultSet.getDouble("name");
