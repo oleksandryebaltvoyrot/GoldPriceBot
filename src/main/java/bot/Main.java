@@ -8,6 +8,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+
+import static services.DbService.getConnection;
 
 public class Main {
     public static void main(String[] args) throws IOException, TelegramApiRequestException {
@@ -27,6 +31,15 @@ public class Main {
             output.write(respText.getBytes());
             output.flush();
             new GoldPriceBot().dailyPriceCheck();
+
+            try {
+                getConnection();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             exchange.close();
         }));
         server.setExecutor(null); // creates a default executor
