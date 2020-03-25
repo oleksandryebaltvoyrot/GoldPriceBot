@@ -36,7 +36,7 @@ public class Main {
             String sql = "CREATE TABLE SUBSCRIPTIONS " +
                     "(ID INT PRIMARY KEY     NOT NULL," +
                     " NAME           TEXT    NOT NULL, " +
-                    " PRICE            DOUBLE     NOT NULL)";
+                    " PRICE            TEXT     NOT NULL)";
             try {
                 Connection connection = getConnection();
                 createTable(connection, sql);
