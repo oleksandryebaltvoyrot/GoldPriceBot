@@ -1,6 +1,7 @@
 package bot;
 
 import com.sun.net.httpserver.HttpServer;
+import enums.Storage;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
@@ -12,8 +13,8 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static services.PostgreSQLJDBC.createTable;
 import static services.PostgreSQLJDBC.getConnection;
+import static services.PostgreSQLJDBC.insertPrice;
 
 public class Main {
     public static void main(String[] args) throws IOException, TelegramApiRequestException {
@@ -39,7 +40,8 @@ public class Main {
                     " PRICE            TEXT     NOT NULL)";
             try {
                 Connection connection = getConnection();
-                createTable(connection, sql);
+                //createTable(connection, sql);
+                insertPrice(connection, Storage.GOLD_FILE_PATH, "19,99");
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
