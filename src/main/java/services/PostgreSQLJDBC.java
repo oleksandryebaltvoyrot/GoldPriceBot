@@ -58,10 +58,10 @@ public class PostgreSQLJDBC {
         PreparedStatement statement =
                 new ParameterizedPreparedStatementCreator()
                         .setSql("INSERT INTO SUBSCRIPTIONS (NAME,PRICE) VALUES (':name', :price) " +
-                                "ON CONFLICT (NAME) DO UPDATE SET PRICE=:price1;")
+                                "ON CONFLICT (NAME) DO UPDATE SET PRICE=:cost;")
                         .setParameter("name", name.getStorageName())
                         .setParameter("price", price)
-                        .setParameter("price1", price).createPreparedStatement(connection);
+                        .setParameter("cost", price).createPreparedStatement(connection);
         //statement.executeUpdate();
         logger.info("Price changed. NAME:{} PRICE:{}", name.getStorageName(), price);
         statement.close();
@@ -118,3 +118,4 @@ public class PostgreSQLJDBC {
 //        return price;
     }
 }
+
