@@ -13,6 +13,7 @@ import java.sql.Statement;
 public class PostgreSQLJDBC {
     private static final Logger logger = LogManager.getLogger(PostgreSQLJDBC.class);
 
+    private static Connection connection = null;
 
 
     public static Connection getConnection() throws URISyntaxException, SQLException {
@@ -22,12 +23,15 @@ public class PostgreSQLJDBC {
         String password = dbUri.getUserInfo().split(":")[1];
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
         logger.info("connecting to DB {}", dbUrl);
-        return DriverManager.getConnection(dbUrl, username, password);
+        if (connection == null) {
+            return DriverManager.getConnection(dbUrl, username, password);
+        }
+        return connection;
     }
 
     public static void createTable(Connection connection, String sql) throws SQLException {
         Statement stmt = connection.createStatement();
-        stmt.executeQuery(sql);
+        stmt.executeUpdate(sql);
         logger.info("create a table {}", sql);
         stmt.close();
     }
