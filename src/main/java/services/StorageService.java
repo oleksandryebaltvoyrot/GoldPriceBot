@@ -16,12 +16,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static enums.Storage.GOLD_FILE_PATH;
+
 public class StorageService {
     private static final Logger LOGGER = LogManager.getLogger(StorageService.class);
-
-    private static final String GOLD_FILE_PATH = "src/main/resources/gold_storage.txt";
-    private static final String PASS_FILE_PATH = "src/main/resources/pass_storage.txt";
-    private static final String ULTIMATE_FILE_PATH = "src/main/resources/ultimate_storage.txt";
     private static final Pattern PRICE_PATTERN = Pattern.compile("(\\S+)::(\\S+)");
 
     public static void addPriceToStorage(XboxGoldPrice user, String storage) {
@@ -58,7 +56,7 @@ public class StorageService {
     }
 
     public static String getStoredGoldPriceAsString() {
-        File file = new File(GOLD_FILE_PATH);
+        File file = new File(GOLD_FILE_PATH.getStoragePath());
         StringBuilder out = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
