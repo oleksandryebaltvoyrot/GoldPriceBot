@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static enums.Storage.GOLD_FILE_PATH;
+import static enums.Storage.ULTIMATE_FILE_PATH;
 import static services.PostgreSQLJDBC.*;
 
 public class Main {
@@ -40,9 +41,10 @@ public class Main {
                 Connection connection = getConnection();
                 createTable(connection, sql);
                 insertPrice(connection, GOLD_FILE_PATH, 19.99);
-//                insertOrUpdatePrice(connection, ULTIMATE_FILE_PATH, 19.99);
-//                insertOrUpdatePrice(connection, GOLD_FILE_PATH, 19.99);
+                insertOrUpdatePrice(connection, ULTIMATE_FILE_PATH, 19.99);
+                insertOrUpdatePrice(connection, GOLD_FILE_PATH, 19.99);
                 updatePrice(connection, GOLD_FILE_PATH, 20.99);
+                selectAll(connection);
                 selectPrice(connection, GOLD_FILE_PATH);
                 connection.close();
             } catch (URISyntaxException | SQLException e) {
