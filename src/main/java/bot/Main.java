@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
+import java.sql.Connection;
 import java.sql.SQLException;
 
-import static services.DbService.getConnection;
+import static services.PostgreSQLJDBC.createTable;
+import static services.PostgreSQLJDBC.getConnection;
 
 public class Main {
     public static void main(String[] args) throws IOException, TelegramApiRequestException {
@@ -31,9 +33,13 @@ public class Main {
             output.write(respText.getBytes());
             output.flush();
             new GoldPriceBot().dailyPriceCheck();
-
+            String sql = "CREATE TABLE SUBSCRIPTIONS " +
+                    "(ID INT PRIMARY KEY     NOT NULL," +
+                    " NAME           TEXT    NOT NULL, " +
+                    " PRICE            DOUBLE     NOT NULL)";
             try {
-                getConnection();
+                Connection connection = getConnection();
+                createTable(connection, sql);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             } catch (SQLException e) {

@@ -8,9 +8,12 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-public class DbService {
-    private static final Logger logger = LogManager.getLogger(DbService.class);
+public class PostgreSQLJDBC {
+    private static final Logger logger = LogManager.getLogger(PostgreSQLJDBC.class);
+
+
 
     public static Connection getConnection() throws URISyntaxException, SQLException {
         URI dbUri = new URI(System.getenv("DATABASE_URL"));
@@ -20,5 +23,12 @@ public class DbService {
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
         logger.info("connecting to DB {}", dbUrl);
         return DriverManager.getConnection(dbUrl, username, password);
+    }
+
+    public static void createTable(Connection connection, String sql) throws SQLException {
+        Statement stmt = connection.createStatement();
+        stmt.executeQuery(sql);
+        logger.info("create a table {}", sql);
+        stmt.close();
     }
 }
