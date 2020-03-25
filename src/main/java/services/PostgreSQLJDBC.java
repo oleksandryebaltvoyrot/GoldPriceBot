@@ -42,6 +42,14 @@ public class PostgreSQLJDBC {
         stmt.close();
     }
 
+    public static void insertOrUpdatePrice(Connection connection, Storage name, double price) throws SQLException {
+        String sql = String.format("INSERT INTO SUBSCRIPTIONS (NAME,PRICE) VALUES ('%s', %s) ON CONFLICT (NAME) DO UPDATE SET PRICE=%s;", name.getStorageName(), price, price);
+        Statement stmt = connection.createStatement();
+        stmt.executeUpdate(sql);
+        logger.info(sql);
+        stmt.close();
+    }
+
     public static void updatePrice(Connection connection, Storage name, double price) throws SQLException {
         String sql = String.format("UPDATE SUBSCRIPTIONS SET PRICE = %s WHERE NAME='%s';", price, name.getStorageName());
         Statement stmt = connection.createStatement();
