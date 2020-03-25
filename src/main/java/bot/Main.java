@@ -1,7 +1,6 @@
 package bot;
 
 import com.sun.net.httpserver.HttpServer;
-import enums.Storage;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
@@ -13,8 +12,8 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static services.PostgreSQLJDBC.getConnection;
-import static services.PostgreSQLJDBC.insertPrice;
+import static enums.Storage.GOLD_FILE_PATH;
+import static services.PostgreSQLJDBC.*;
 
 public class Main {
     public static void main(String[] args) throws IOException, TelegramApiRequestException {
@@ -35,16 +34,16 @@ public class Main {
             output.flush();
             new GoldPriceBot().dailyPriceCheck();
             String sql = "CREATE TABLE SUBSCRIPTIONS " +
-                    "(ID INT PRIMARY KEY     NOT NULL," +
-                    " NAME           TEXT    NOT NULL, " +
-                    " PRICE            TEXT     NOT NULL)";
+                    "(NAME TEXT PRIMARY KEY     NOT NULL," +
+                    " PRICE            REAL     NOT NULL)";
             try {
                 Connection connection = getConnection();
-                //createTable(connection, sql);
-                insertPrice(connection, Storage.GOLD_FILE_PATH, "19,99");
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
+                createTable(connection, sql);
+                insertPrice(connection, GOLD_FILE_PATH, 19.99);
+                updatePrice(connection, GOLD_FILE_PATH, 20.99);
+                selectPrice(connection, GOLD_FILE_PATH);
+                connection.close();
+            } catch (URISyntaxException | SQLException e) {
                 e.printStackTrace();
             }
 
