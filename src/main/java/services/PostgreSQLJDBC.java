@@ -54,7 +54,7 @@ public class PostgreSQLJDBC {
         String sql = String.format("SELECT PRICE FROM SUBSCRIPTIONS WHERE NAME='%s';", name.getStorageName());
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(sql);
-        double price = resultSet.next() ? resultSet.getFloat("price") : 0;
+        double price = resultSet.next() ? resultSet.getDouble("price") : 0;
         logger.info(sql);
         stmt.close();
         logger.info(price);

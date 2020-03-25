@@ -35,7 +35,7 @@ public class Main {
             new GoldPriceBot().dailyPriceCheck();
             String sql = "CREATE TABLE SUBSCRIPTIONS " +
                     "(NAME TEXT PRIMARY KEY     NOT NULL," +
-                    " PRICE            REAL     NOT NULL)";
+                    " PRICE            DOUBLE PRECISION     NOT NULL)";
             try {
                 Connection connection = getConnection();
                 createTable(connection, sql);
