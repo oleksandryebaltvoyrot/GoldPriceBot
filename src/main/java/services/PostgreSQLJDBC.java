@@ -35,7 +35,7 @@ public class PostgreSQLJDBC {
     }
 
     public static void insertPrice(Connection connection, Storage name, double price) throws SQLException {
-        String sql = String.format("INSERT INTO SUBSCRIPTIONS (NAME,PRICE) VALUES ('%s', '%s');", name.getStorageName(), price);
+        String sql = String.format("INSERT INTO SUBSCRIPTIONS (NAME,PRICE) VALUES ('%s', %s);", name.getStorageName(), price);
         Statement stmt = connection.createStatement();
         stmt.executeUpdate(sql);
         logger.info("SUBSCRIPTIONS table updated {}", sql);
@@ -43,7 +43,7 @@ public class PostgreSQLJDBC {
     }
 
     public static void updatePrice(Connection connection, Storage name, double price) throws SQLException {
-        String sql = String.format("UPDATE SUBSCRIPTIONS SET PRICE = %s WHERE NAME = '%s';", price, name.getStorageName());
+        String sql = String.format("UPDATE SUBSCRIPTIONS SET PRICE = %s WHERE NAME='%s';", price, name.getStorageName());
         Statement stmt = connection.createStatement();
         stmt.executeUpdate(sql);
         logger.info(sql);
@@ -51,7 +51,7 @@ public class PostgreSQLJDBC {
     }
 
     public static Double selectPrice(Connection connection, Storage name) throws SQLException {
-        String sql = String.format("SELECT PRICE FROM SUBSCRIPTIONS WHERE NAME=%s;", name.getStorageName());
+        String sql = String.format("SELECT PRICE FROM SUBSCRIPTIONS WHERE NAME='%s';", name.getStorageName());
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(sql);
         double price = resultSet.getDouble("name");
