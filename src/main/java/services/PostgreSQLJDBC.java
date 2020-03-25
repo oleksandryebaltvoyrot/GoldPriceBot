@@ -55,16 +55,15 @@ public class PostgreSQLJDBC {
     }
 
     public static void insertOrUpdatePrice(Connection connection, Storage name, double price) throws SQLException {
-        String statement =
+        PreparedStatement statement =
                 new ParameterizedPreparedStatementCreator()
                         .setSql("INSERT INTO SUBSCRIPTIONS (NAME,PRICE) VALUES (':name', :price) " +
                                 "ON CONFLICT (NAME) DO UPDATE SET PRICE=:price;")
                         .setParameter("name", name.getStorageName())
-                        .setParameter("price", price).getSql();
+                        .setParameter("price", price).createPreparedStatement(connection);
         //statement.executeUpdate();
         logger.info("Price changed. NAME:{} PRICE:{}", name.getStorageName(), price);
-        logger.info(statement);
-        //statement.close();
+        statement.close();
 
 //        String sql = String.format("INSERT INTO SUBSCRIPTIONS (NAME,PRICE) VALUES ('%s', %s) ON CONFLICT (NAME) DO UPDATE SET PRICE=%s;", name.getStorageName(), price, price);
 //        Statement stmt = connection.createStatement();
@@ -101,10 +100,10 @@ public class PostgreSQLJDBC {
         PreparedStatement statement =
                 new SelectCreator()
                         .column("PRICE")
-                        .whereEquals("NAME", "'" + name.getStorageName() + "'")
+                        .whereEquals("NAME", name.getStorageName())
                         .createPreparedStatement(connection);
         ResultSet resultSet = statement.executeQuery();
-        double price = resultSet.next() ? resultSet.getDouble("price") : 0;
+        double price = resultSet.next() ? resultSet.getDouble("PRICE") : 0;
         logger.info("Price selected. NAME:{} PRICE:{}", name.getStorageName(), price);
         statement.close();
         return price;
