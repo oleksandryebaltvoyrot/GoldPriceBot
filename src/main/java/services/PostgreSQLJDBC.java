@@ -1,6 +1,9 @@
 package services;
 
-import ca.krasnay.sqlbuilder.*;
+import ca.krasnay.sqlbuilder.InsertCreator;
+import ca.krasnay.sqlbuilder.ParameterizedPreparedStatementCreator;
+import ca.krasnay.sqlbuilder.SelectBuilder;
+import ca.krasnay.sqlbuilder.UpdateCreator;
 import enums.Storage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -94,26 +97,26 @@ public class PostgreSQLJDBC {
     }
 
     public static Double selectPrice(Connection connection, Storage name) throws SQLException {
-        String sql = new SelectBuilder().column("price").where("NAME="+name).toString();
+        String sql = new SelectBuilder().column("PRICE").where("NAME="+name.getStorageName()).toString();
         logger.info("SELECT!!!"+sql);
-        PreparedStatement statement =
-                new SelectCreator()
-                        .column("PRICE")
-                        .whereEquals("NAME", name.getStorageName())
-                        .createPreparedStatement(connection);
-        ResultSet resultSet = statement.executeQuery();
-        double price = resultSet.next() ? resultSet.getDouble("PRICE") : 0;
-        logger.info("Price selected. NAME:{} PRICE:{}", name.getStorageName(), price);
-        statement.close();
-        return price;
-//        String sql = String.format("SELECT PRICE FROM SUBSCRIPTIONS WHERE NAME='%s';", name.getStorageName());
-//        Statement stmt = connection.createStatement();
-//        ResultSet resultSet = stmt.executeQuery(sql);
-//        double price = resultSet.next() ? resultSet.getDouble("price") : 0;
-//        logger.info(sql);
-//        stmt.close();
-//        logger.info(price);
+//        PreparedStatement statement =
+//                new SelectCreator()
+//                        .column("PRICE")
+//                        .whereEquals("NAME", name.getStorageName())
+//                        .createPreparedStatement(connection);
+//        ResultSet resultSet = statement.executeQuery();
+//        double price = resultSet.next() ? resultSet.getDouble("PRICE") : 0;
+//        logger.info("Price selected. NAME:{} PRICE:{}", name.getStorageName(), price);
+//        statement.close();
 //        return price;
+//        String sql = String.format("SELECT PRICE FROM SUBSCRIPTIONS WHERE NAME='%s';", name.getStorageName());
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(sql);
+        double price = resultSet.next() ? resultSet.getDouble("price") : 0;
+        logger.info(sql);
+        stmt.close();
+        logger.info(price);
+        return price;
     }
 }
 
