@@ -13,12 +13,10 @@ import utils.Emoji;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static enums.Subscriptions.*;
-import static utils.Emoji.POUND;
 import static utils.XboxSubscriptionHelper.*;
 
 
@@ -66,25 +64,23 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
                 List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE, GOLD_YEAR);
                 List<XboxSubscriptionPrice> priceList = goldList.stream().map(sub ->
                         priceStorageService.getPriceBySubscription(sub)).collect(Collectors.toList());
-                String message = priceList.stream().map(price -> "\n" + price.toFormattedPriceAsString()).collect(Collectors.joining());
+                String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + "\n").collect(Collectors.joining());
                 sendPriceMessage(userId, String.format(header, "GOLD"), message);
             }
             if (request.contains("ultimate")) {
                 XboxSubscriptionPrice price = priceStorageService.getPriceBySubscription(ULTIMATE);
-                sendPriceMessage(userId, String.format(header, price.getSubscription()), price.getPrice().toString());
+                sendPriceMessage(userId, String.format(header, price.getSubscription()), price.toFormattedPriceAsString());
             }
             if (request.contains("game_pass")) {
                 XboxSubscriptionPrice price = priceStorageService.getPriceBySubscription(GAME_PASS);
-                sendPriceMessage(userId, String.format(header, price.getSubscription()), price.getPrice().toString());
+                sendPriceMessage(userId, String.format(header, price.getSubscription()), price.toFormattedPriceAsString());
             }
             if (request.contains("check")) {
                 try {
-                    Set<Subscriptions> subscriptionsWithoutChanges = dailyPriceCheck();
-                    AtomicReference<XboxSubscriptionPrice> price = null;
+                    List<XboxSubscriptionPrice> subscriptionsWithoutChanges = dailyPriceCheck();
                     if (!subscriptionsWithoutChanges.isEmpty()) {
                         subscriptionsWithoutChanges.forEach(subscription -> {
-                            price.set(priceStorageService.getPriceBySubscription(subscription));
-                            sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, price.get().getPrice().toString());
+                            sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, subscription.toFormattedPriceAsString());
                         });
                     }
                 } catch (IOException e) {
@@ -100,12 +96,12 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
                 .forEach(user -> sendPriceMessage(user, headerMessage, price));
     }
 
-    public Set<Subscriptions> dailyPriceCheck() throws IOException {
+    public List<XboxSubscriptionPrice> dailyPriceCheck() throws IOException {
         List<XboxSubscriptionPrice> golds = extractGoldPrice();
         HashMap<Subscriptions, XboxSubscriptionPrice> subscriptionsList = new HashMap<>();
-        subscriptionsList.put(Subscriptions.GOLD_MONTH, golds.get(2));
+        subscriptionsList.put(Subscriptions.GOLD_MONTH, golds.get(0));
         subscriptionsList.put(Subscriptions.GOLD_THREE, golds.get(1));
-        subscriptionsList.put(Subscriptions.GOLD_YEAR, golds.get(0));
+        subscriptionsList.put(Subscriptions.GOLD_YEAR, golds.get(2));
         subscriptionsList.put(Subscriptions.ULTIMATE, extractGameUltimatePrice());
         subscriptionsList.put(Subscriptions.GAME_PASS, extractGamePassPrice());
 
@@ -116,13 +112,13 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
                 subscriptionsList.remove(subscription);
             }
         });
-        return subscriptionsList.keySet();
+        return new ArrayList<>(subscriptionsList.values());
     }
 
     void sendPriceMessage(String chatId, String header, String price) {
         SendMessage message = new SendMessage()
                 .setChatId(chatId)
-                .setText(header + "\n\n" + price + POUND);
+                .setText(header + "\n\n" + price);
         try {
             execute(message);
             logger.info(message);
