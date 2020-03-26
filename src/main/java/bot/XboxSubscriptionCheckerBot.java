@@ -104,19 +104,39 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
         subscriptionsList.put(Subscriptions.GAME_PASS, extractGamePassPrice());
 
         subscriptionsList.keySet().forEach(subscription -> {
-                    Double newPrice = subscriptionsList.get(subscription).getPrice();
+                    XboxSubscriptionPrice newSPrice = subscriptionsList.get(subscription);
+                    Double newPrice = newSPrice.getPrice();
                     Double oldPrice = priceStorage.getPriceBySubscription(subscription).getPrice();
                     if (!newPrice.equals(oldPrice)) {
-                        priceStorage.updatePrice(subscriptionsList.get(subscription));
+                        priceStorage.updatePrice(newSPrice);
                         if (newPrice > oldPrice) {
-                            sendPriceChangedMessage(subscription.name() + " " + newPrice + "+");
+                            sendPriceChangedMessage(" + " + subscriptionsList.get(subscription).toFormattedPriceAsString());
                         } else {
-                            sendPriceChangedMessage(subscription.name() + " " + newPrice + "-");
+                            sendPriceChangedMessage(" - " + subscriptionsList.get(subscription).toFormattedPriceAsString());
                         }
                         subscriptionsList.remove(subscription);
                     }
                 }
         );
+        return new ArrayList<>(subscriptionsList.values());
+    }
+
+    public List<XboxSubscriptionPrice> dailyPriceCheck1() throws IOException {
+        List<XboxSubscriptionPrice> golds = extractGoldPrice();
+        HashMap<Subscriptions, XboxSubscriptionPrice> subscriptionsList = new HashMap<>();
+        subscriptionsList.put(Subscriptions.GOLD_MONTH, golds.get(0));
+        subscriptionsList.put(Subscriptions.GOLD_THREE, golds.get(1));
+        subscriptionsList.put(Subscriptions.GOLD_YEAR, golds.get(2));
+        subscriptionsList.put(Subscriptions.ULTIMATE, extractGameUltimatePrice());
+        subscriptionsList.put(Subscriptions.GAME_PASS, extractGamePassPrice());
+
+        subscriptionsList.keySet().forEach(subscription -> {
+            if (!subscriptionsList.get(subscription).getPrice().equals(priceStorage.getPriceBySubscription(subscription).getPrice())) {
+                priceStorage.updatePrice(subscriptionsList.get(subscription));
+                sendPriceChangedMessage(subscriptionsList.get(subscription).toFormattedPriceAsString());
+                subscriptionsList.remove(subscription);
+            }
+        });
         return new ArrayList<>(subscriptionsList.values());
     }
 
