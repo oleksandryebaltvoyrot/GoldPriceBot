@@ -54,11 +54,8 @@ public class PostgreSQLJDBC {
     public static void insertOrUpdatePrice(Connection connection, Storage name, double price) throws SQLException {
         PreparedStatement statement =
                 new ParameterizedPreparedStatementCreator()
-                        .setSql("INSERT INTO :table (:columnName,:columnPrice) VALUES (:name, :price) " +
-                                "ON CONFLICT (NAME) DO UPDATE SET PRICE=:price;")
-                        .setParameter("table", SUBSCRIPTIONS)
-                        .setParameter("columnName", NAME)
-                        .setParameter("columnPrice", PRICE)
+                        .setSql("INSERT INTO " + SUBSCRIPTIONS + " (" + NAME + "," + PRICE + ") VALUES (:name, :price) " +
+                                "ON CONFLICT (" + NAME + ") DO UPDATE SET " + PRICE + "=:price;")
                         .setParameter("name", name.getStorageName())
                         .setParameter("price", price).createPreparedStatement(connection);
         statement.executeUpdate();
