@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static enums.Subscriptions.*;
+import static utils.Emoji.POUND;
 import static utils.XboxSubscriptionHelper.*;
 
 
@@ -65,7 +66,8 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
                 List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE, GOLD_YEAR);
                 List<XboxSubscriptionPrice> priceList = goldList.stream().map(sub ->
                         priceStorageService.getPriceBySubscription(sub)).collect(Collectors.toList());
-                priceList.forEach(price -> sendPriceMessage(userId, String.format(header, price.getSubscription()), price.getPrice().toString()));
+                String message = priceList.stream().map(price -> "\n" + price.toFormattedPriceAsString()).collect(Collectors.joining());
+                sendPriceMessage(userId, String.format(header, "GOLD"), message);
             }
             if (request.contains("ultimate")) {
                 XboxSubscriptionPrice price = priceStorageService.getPriceBySubscription(ULTIMATE);
@@ -79,10 +81,12 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
                 try {
                     Set<Subscriptions> subscriptionsWithoutChanges = dailyPriceCheck();
                     AtomicReference<XboxSubscriptionPrice> price = null;
-                    subscriptionsWithoutChanges.forEach(subscription -> {
-                        price.set(priceStorageService.getPriceBySubscription(GAME_PASS));
-                        sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, price.get().getPrice().toString());
-                    });
+                    if (!subscriptionsWithoutChanges.isEmpty()) {
+                        subscriptionsWithoutChanges.forEach(subscription -> {
+                            price.set(priceStorageService.getPriceBySubscription(subscription));
+                            sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, price.get().getPrice().toString());
+                        });
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -118,7 +122,7 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
     void sendPriceMessage(String chatId, String header, String price) {
         SendMessage message = new SendMessage()
                 .setChatId(chatId)
-                .setText(header + "\n\n" + price);
+                .setText(header + "\n\n" + price + POUND);
         try {
             execute(message);
             logger.info(message);
