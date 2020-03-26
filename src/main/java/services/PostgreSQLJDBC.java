@@ -1,8 +1,6 @@
 package services;
 
-import ca.krasnay.sqlbuilder.InsertCreator;
-import ca.krasnay.sqlbuilder.SelectCreator;
-import ca.krasnay.sqlbuilder.UpdateCreator;
+import ca.krasnay.sqlbuilder.*;
 import enums.Storage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,11 +52,21 @@ public class PostgreSQLJDBC {
     }
 
     public static void insertOrUpdatePrice(Connection connection, Storage name, double price) throws SQLException {
-        String sql = String.format("INSERT INTO SUBSCRIPTIONS (NAME,PRICE) VALUES ('%s', %s) ON CONFLICT (NAME) DO UPDATE SET PRICE=%s;", name.getStorageName(), price, price);
-        Statement stmt = connection.createStatement();
-        stmt.executeUpdate(sql);
-        logger.info(sql);
-        stmt.close();
+        PreparedStatement statement =
+                new ParameterizedPreparedStatementCreator()
+                        .setSql("INSERT INTO SUBSCRIPTIONS (NAME,PRICE) VALUES (:name, :price) " +
+                                "ON CONFLICT (NAME) DO UPDATE SET PRICE=:price;")
+                        .setParameter("name", name.getStorageName())
+                        .setParameter("price", price).createPreparedStatement(connection);
+        //statement.executeUpdate();
+        logger.info("Price changed. NAME:{} PRICE:{}", name.getStorageName(), price);
+        statement.close();
+
+//        String sql = String.format("INSERT INTO SUBSCRIPTIONS (NAME,PRICE) VALUES ('%s', %s) ON CONFLICT (NAME) DO UPDATE SET PRICE=%s;", name.getStorageName(), price, price);
+//        Statement stmt = connection.createStatement();
+//        stmt.executeUpdate(sql);
+//        logger.info(sql);
+//        stmt.close();
     }
 
     public static void updatePrice(Connection connection, Storage name, double price) throws SQLException {
@@ -86,10 +94,12 @@ public class PostgreSQLJDBC {
     }
 
     public static Double selectPrice(Connection connection, Storage name) throws SQLException {
+        String sql = new SelectBuilder().column("price").where("NAME="+name).toString();
+        logger.info("SELECT!!!"+sql);
         PreparedStatement statement =
                 new SelectCreator()
                         .column("PRICE")
-                        .where("NAME='" + name + "'")
+                        .whereEquals("NAME", name.getStorageName())
                         .createPreparedStatement(connection);
         ResultSet resultSet = statement.executeQuery();
         double price = resultSet.next() ? resultSet.getDouble("PRICE") : 0;
