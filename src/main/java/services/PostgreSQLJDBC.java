@@ -97,7 +97,7 @@ public class PostgreSQLJDBC {
     }
 
     public static Double selectPrice(Connection connection, Storage name) throws SQLException {
-        String sql = new SelectBuilder().column("PRICE").where("NAME="+name.getStorageName()).toString();
+        String sql = new SelectBuilder().column("PRICE").where("NAME='"+name.getStorageName()+"'").toString();
         logger.info("SELECT!!!"+sql);
 //        PreparedStatement statement =
 //                new SelectCreator()
