@@ -109,9 +109,9 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                     if (!newPrice.equals(oldPrice)) {
                         priceStorage.updatePrice(subscriptionsList.get(subscription));
                         if (newPrice > oldPrice) {
-                            sendPriceChangedMessage(subscription.name() + " " + subscriptionsList.get(subscription).getPrice() + "+" + "\n");
+                            sendPriceChangedMessage(subscription.name() + " " + newPrice + "+");
                         } else {
-                            sendPriceChangedMessage(subscription.name() + " " + subscriptionsList.get(subscription).getPrice() + "-" + "\n");
+                            sendPriceChangedMessage(subscription.name() + " " + newPrice + "-");
                         }
                         subscriptionsList.remove(subscription);
                     }
