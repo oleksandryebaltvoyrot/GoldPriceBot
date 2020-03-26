@@ -104,12 +104,19 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
         subscriptionsList.put(Subscriptions.GAME_PASS, extractGamePassPrice());
 
         subscriptionsList.keySet().forEach(subscription -> {
-            if (!subscriptionsList.get(subscription).getPrice().equals(priceStorage.getPriceBySubscription(subscription).getPrice())) {
-                priceStorage.updatePrice(subscriptionsList.get(subscription));
-                sendPriceChangedMessage(subscriptionsList.get(subscription).toFormattedPriceAsString());
-                subscriptionsList.remove(subscription);
-            }
-        });
+                    Double newPrice = subscriptionsList.get(subscription).getPrice();
+                    Double oldPrice = priceStorage.getPriceBySubscription(subscription).getPrice();
+                    if (!newPrice.equals(oldPrice)) {
+                        priceStorage.updatePrice(subscriptionsList.get(subscription));
+                        subscriptionsList.remove(subscription);
+                        if (newPrice > oldPrice) {
+                            sendPriceChangedMessage(subscription.name() + " " + subscriptionsList.get(subscription).getPrice() + "+" + "\n");
+                        } else {
+                            sendPriceChangedMessage(subscription.name() + " " + subscriptionsList.get(subscription).getPrice() + "-" + "\n");
+                        }
+                    }
+                }
+        );
         return new ArrayList<>(subscriptionsList.values());
     }
 
