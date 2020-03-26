@@ -80,7 +80,10 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                 try {
                     List<XboxSubscriptionPrice> subscriptionsWithoutChanges = dailyPriceCheck();
                     if (!subscriptionsWithoutChanges.isEmpty()) {
-                        String message = subscriptionsWithoutChanges.stream().map(price -> price.toFormattedPriceAsString() + "\n").collect(Collectors.joining());
+                        String message = subscriptionsWithoutChanges.stream()
+                                .sorted(Comparator.comparingDouble(XboxSubscriptionPrice::getPrice))
+                                .map(price -> price.toFormattedPriceAsString() + "\n")
+                                .collect(Collectors.joining());
                         sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, message);
                     }
                 } catch (IOException e) {
@@ -120,25 +123,6 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                     }
                 }
         );
-        return new ArrayList<>(subscriptionsList.values());
-    }
-
-    public List<XboxSubscriptionPrice> dailyPriceCheck1() throws IOException {
-        List<XboxSubscriptionPrice> golds = extractGoldPrice();
-        HashMap<Subscriptions, XboxSubscriptionPrice> subscriptionsList = new HashMap<>();
-        subscriptionsList.put(Subscriptions.GOLD_MONTH, golds.get(0));
-        subscriptionsList.put(Subscriptions.GOLD_THREE, golds.get(1));
-        subscriptionsList.put(Subscriptions.GOLD_YEAR, golds.get(2));
-        subscriptionsList.put(Subscriptions.ULTIMATE, extractGameUltimatePrice());
-        subscriptionsList.put(Subscriptions.GAME_PASS, extractGamePassPrice());
-
-        subscriptionsList.keySet().forEach(subscription -> {
-            if (!subscriptionsList.get(subscription).getPrice().equals(priceStorage.getPriceBySubscription(subscription).getPrice())) {
-                priceStorage.updatePrice(subscriptionsList.get(subscription));
-                sendPriceChangedMessage(subscriptionsList.get(subscription).toFormattedPriceAsString());
-                subscriptionsList.remove(subscription);
-            }
-        });
         return new ArrayList<>(subscriptionsList.values());
     }
 
