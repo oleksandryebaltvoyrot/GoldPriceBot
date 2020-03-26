@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -54,7 +53,9 @@ public class XboxSubscriptionHelper {
                     .collect(Collectors.toList());
         }
         logger.info("price not found");
-        return Collections.emptyList();
+        return goldList.stream()
+                .map(subscription -> new XboxSubscriptionPrice().setPrice(0.0).setSubscription(subscription))
+                .collect(Collectors.toList());
     }
 
     public static XboxSubscriptionPrice extractGameUltimatePrice() throws IOException {

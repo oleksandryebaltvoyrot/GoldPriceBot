@@ -16,5 +16,11 @@ public class Emoji {
     public static final String ROTATING_LIGHT = EmojiParser.parseToUnicode(":rotating_light:");
     public static final String WHITE_CHECK_MARK = EmojiParser.parseToUnicode(":white_check_mark:");
     public static final String HEAVY_MULTIPLICATION_X = EmojiParser.parseToUnicode(":heavy_multiplication_x:");
-    public static final String POUND = EmojiParser.parseToUnicode(":pound:");
+    public static final String SMALL_RED_TRIANGLE = EmojiParser.parseToUnicode(":small_red_triangle:");
+    public static final String VIDEO_GAME = EmojiParser.parseToUnicode(":video_game:");
+    public static final String SMALL_RED_TRIANGLE_DOWN = EmojiParser.parseToUnicode(":small_red_triangle_down:");
+    public static final String TADA = EmojiParser.parseToUnicode(":tada:");
+    public static final String WARNING = EmojiParser.parseToUnicode(":warning:");
+
+
 }

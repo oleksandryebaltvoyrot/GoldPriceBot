@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static enums.Subscriptions.*;
+import static utils.Emoji.SMALL_RED_TRIANGLE;
+import static utils.Emoji.SMALL_RED_TRIANGLE_DOWN;
 import static utils.XboxSubscriptionHelper.*;
 
 
@@ -110,9 +112,9 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                     if (!newPrice.equals(oldPrice)) {
                         priceStorage.updatePrice(newSPrice);
                         if (newPrice > oldPrice) {
-                            sendPriceChangedMessage(" + " + subscriptionsList.get(subscription).toFormattedPriceAsString());
+                            sendPriceChangedMessage(SMALL_RED_TRIANGLE + " " + subscriptionsList.get(subscription).toFormattedPriceAsString());
                         } else {
-                            sendPriceChangedMessage(" - " + subscriptionsList.get(subscription).toFormattedPriceAsString());
+                            sendPriceChangedMessage(SMALL_RED_TRIANGLE_DOWN + " " + subscriptionsList.get(subscription).toFormattedPriceAsString());
                         }
                         subscriptionsList.remove(subscription);
                     }
