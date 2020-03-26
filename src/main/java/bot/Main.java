@@ -12,8 +12,7 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static enums.Storage.GOLD_FILE_PATH;
-import static enums.Storage.ULTIMATE_FILE_PATH;
+import static enums.Storage.*;
 import static services.PostgreSQLJDBC.*;
 
 public class Main {
@@ -34,16 +33,11 @@ public class Main {
             output.write(respText.getBytes());
             output.flush();
             new GoldPriceBot().dailyPriceCheck();
-            String sql = "CREATE TABLE SUBSCRIPTIONS " +
-                    "(NAME TEXT PRIMARY KEY     NOT NULL," +
-                    " PRICE            DOUBLE PRECISION     NOT NULL)";
             try {
                 Connection connection = getConnection();
-                createTable(connection, sql);
-                insertPrice(connection, GOLD_FILE_PATH, 19.99);
                 insertOrUpdatePrice(connection, ULTIMATE_FILE_PATH, 19.99);
                 insertOrUpdatePrice(connection, GOLD_FILE_PATH, 19.99);
-                updatePrice(connection, GOLD_FILE_PATH, 20.99);
+                insertOrUpdatePrice(connection, PASS_FILE_PATH, 19.99);
                 selectAll(connection);
                 selectPrice(connection, GOLD_FILE_PATH);
                 connection.close();

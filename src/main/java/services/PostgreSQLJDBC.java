@@ -41,6 +41,14 @@ public class PostgreSQLJDBC {
         stmt.close();
     }
 
+    public static void createSubscriptionTable(Connection connection) throws SQLException {
+        String sql = "CREATE TABLE " + SUBSCRIPTIONS +
+                "(" + NAME + " TEXT PRIMARY KEY NOT NULL, "
+                + PRICE + " DOUBLE PRECISION NOT NULL)";
+        createTable(connection, sql);
+    }
+
+
     public static void insertPrice(Connection connection, Storage name, double price) throws SQLException {
         PreparedStatement statement = new InsertCreator(SUBSCRIPTIONS)
                 .setValue(NAME, name.getStorageName())
