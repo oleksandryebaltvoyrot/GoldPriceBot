@@ -1,6 +1,9 @@
 package services;
 
-import ca.krasnay.sqlbuilder.*;
+import ca.krasnay.sqlbuilder.InsertCreator;
+import ca.krasnay.sqlbuilder.ParameterizedPreparedStatementCreator;
+import ca.krasnay.sqlbuilder.SelectCreator;
+import ca.krasnay.sqlbuilder.UpdateCreator;
 import enums.Storage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,7 +61,7 @@ public class PostgreSQLJDBC {
                                 "ON CONFLICT (NAME) DO UPDATE SET PRICE=:price;")
                         .setParameter("name", name.getStorageName())
                         .setParameter("price", price).createPreparedStatement(connection);
-        //statement.executeUpdate();
+        statement.executeUpdate();
         logger.info("Price changed. NAME:{} PRICE:{}", name.getStorageName(), price);
         statement.close();
 
@@ -94,8 +97,6 @@ public class PostgreSQLJDBC {
     }
 
     public static Double selectPrice(Connection connection, Storage name) throws SQLException {
-        String sql = new SelectBuilder("SUBSCRIPTIONS").column("PRICE").where("NAME='"+name.getStorageName()+"'").toString();
-        logger.info("SELECT!!!"+sql);
         PreparedStatement statement =
                 new SelectCreator()
                         .column("PRICE")
@@ -107,14 +108,6 @@ public class PostgreSQLJDBC {
         logger.info("Price selected. NAME:{} PRICE:{}", name.getStorageName(), price);
         statement.close();
         return price;
-//        String sql = String.format("SELECT PRICE FROM SUBSCRIPTIONS WHERE NAME='%s';", name.getStorageName());
-//        Statement stmt = connection.createStatement();
-//        ResultSet resultSet = stmt.executeQuery(sql);
-//        double price = resultSet.next() ? resultSet.getDouble("price") : 0;
-//        logger.info(sql);
-//        stmt.close();
-//        logger.info(price);
-//        return price;
     }
 }
 
