@@ -51,10 +51,10 @@ public class SubscriptionDBUtils {
                                 "VALUES (:name, :price) " +
                                 "ON CONFLICT (" + NAME + ") " +
                                 "DO UPDATE SET " + PRICE + "=:price;")
-                        .setParameter("name", subscriptionPrice.getName())
+                        .setParameter("name", subscriptionPrice.getSubscription().getSubscriptionName())
                         .setParameter("price", subscriptionPrice.getPrice()).createPreparedStatement(connection);
         statement.executeUpdate();
-        logger.info("Price changed. NAME:{} PRICE:{}", subscriptionPrice.getName(), subscriptionPrice.getPrice());
+        logger.info("Price changed. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getSubscriptionName(), subscriptionPrice.getPrice());
         statement.close();
     }
 
@@ -62,9 +62,9 @@ public class SubscriptionDBUtils {
         PreparedStatement statement =
                 new UpdateCreator(SUBSCRIPTIONS)
                         .setValue(PRICE, subscriptionPrice.getPrice())
-                        .whereEquals(NAME, subscriptionPrice.getName())
+                        .whereEquals(NAME, subscriptionPrice.getSubscription().getSubscriptionName())
                         .createPreparedStatement(connection);
-        logger.info("Price updated. NAME:{} PRICE:{}", subscriptionPrice.getName(), subscriptionPrice.getPrice());
+        logger.info("Price updated. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getSubscriptionName(), subscriptionPrice.getPrice());
         statement.executeUpdate();
         statement.close();
     }

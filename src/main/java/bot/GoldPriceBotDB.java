@@ -65,15 +65,15 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
                 List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE, GOLD_YEAR);
                 List<XboxSubscriptionPrice> priceList = goldList.stream().map(sub ->
                         priceStorageService.getPriceBySubscription(sub)).collect(Collectors.toList());
-                priceList.forEach(price -> sendPriceMessage(userId, String.format(header, price.getName()), price.getPrice().toString()));
+                priceList.forEach(price -> sendPriceMessage(userId, String.format(header, price.getSubscription()), price.getPrice().toString()));
             }
             if (request.contains("ultimate")) {
                 XboxSubscriptionPrice price = priceStorageService.getPriceBySubscription(ULTIMATE);
-                sendPriceMessage(userId, String.format(header, price.getName()), price.getPrice().toString());
+                sendPriceMessage(userId, String.format(header, price.getSubscription()), price.getPrice().toString());
             }
             if (request.contains("game_pass")) {
                 XboxSubscriptionPrice price = priceStorageService.getPriceBySubscription(GAME_PASS);
-                sendPriceMessage(userId, String.format(header, price.getName()), price.getPrice().toString());
+                sendPriceMessage(userId, String.format(header, price.getSubscription()), price.getPrice().toString());
             }
             if (request.contains("check")) {
                 try {

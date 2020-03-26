@@ -10,7 +10,7 @@ public class XboxSubscriptionPrice {
     private Subscriptions subscriptionName;
     private Double price;
 
-    public Subscriptions getName() {
+    public Subscriptions getSubscription() {
         return subscriptionName;
     }
 
@@ -33,13 +33,13 @@ public class XboxSubscriptionPrice {
         if (this == o) return true;
         if (!(o instanceof XboxSubscriptionPrice)) return false;
         XboxSubscriptionPrice that = (XboxSubscriptionPrice) o;
-        return Objects.equals(getName(), that.getName()) &&
+        return Objects.equals(getSubscription(), that.getSubscription()) &&
                 Objects.equals(getPrice(), that.getPrice());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getPrice());
+        return Objects.hash(getSubscription(), getPrice());
     }
 
     @Override
