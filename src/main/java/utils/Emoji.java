@@ -14,4 +14,7 @@ public class Emoji {
     public static final String MALE_COOK_EMOJI = EmojiParser.parseToUnicode(":male-cook:");
     public static final String ALIEN_EMOJI = EmojiParser.parseToUnicode(":alien:");
     public static final String ROTATING_LIGHT = EmojiParser.parseToUnicode(":rotating_light:");
+    public static final String WHITE_CHECK_MARK = EmojiParser.parseToUnicode(":white_check_mark:");
+    public static final String HEAVY_MULTIPLICATION_X = EmojiParser.parseToUnicode(":heavy_multiplication_x:");
+    public static final String POUND = EmojiParser.parseToUnicode(":pound:");
 }
