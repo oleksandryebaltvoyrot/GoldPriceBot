@@ -22,7 +22,7 @@ import static enums.Subscriptions.*;
 
 public class XboxSubscriptionHelper {
     private static final Logger logger = LogManager.getLogger(XboxSubscriptionHelper.class);
-    private static String url = "https://www.xbox-now.com/en/xbox-live-gold-comparison?page=2";
+    private static String url = "https://www.xbox-now.com/en/xbox-live-gold-comparison?page=3";
     private static String urlPass = "https://www.xbox-now.com/en/game-pass-comparison?page=2";
     private static String urlUltimatePass = "https://www.xbox-now.com/en/game-pass-ultimate-comparison?page=3";
     private static final Pattern PASS_PATTERN = Pattern.compile("<span.*\">(.*)GBP</span>");
