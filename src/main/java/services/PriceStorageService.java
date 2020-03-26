@@ -43,4 +43,20 @@ public class PriceStorageService {
             }
         }
     }
+
+    public void getAll() {
+        Connection connection = getConnection();
+        try {
+            dbUtils.selectAll(connection);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            assert connection != null;
+            try {
+                connection.close();
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
 }

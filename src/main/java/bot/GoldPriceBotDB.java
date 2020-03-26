@@ -99,14 +99,14 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
     public Set<Subscriptions> dailyPriceCheck() throws IOException {
         List<XboxSubscriptionPrice> golds = extractGoldPrice();
         HashMap<Subscriptions, XboxSubscriptionPrice> subscriptionsList = new HashMap<>();
-        subscriptionsList.put(Subscriptions.GOLD_MONTH, golds.get(0));
+        subscriptionsList.put(Subscriptions.GOLD_MONTH, golds.get(2));
         subscriptionsList.put(Subscriptions.GOLD_THREE, golds.get(1));
-        subscriptionsList.put(Subscriptions.GOLD_YEAR, golds.get(2));
+        subscriptionsList.put(Subscriptions.GOLD_YEAR, golds.get(0));
         subscriptionsList.put(Subscriptions.ULTIMATE, extractGameUltimatePrice());
         subscriptionsList.put(Subscriptions.GAME_PASS, extractGamePassPrice());
 
         subscriptionsList.keySet().forEach(subscription -> {
-            if (!subscriptionsList.get(subscription).equals(priceStorageService.getPriceBySubscription(subscription))) {
+            if (!subscriptionsList.get(subscription).getPrice().equals(priceStorageService.getPriceBySubscription(subscription).getPrice())) {
                 priceStorageService.updatePrice(subscriptionsList.get(subscription));
                 sendPriceChangedMessage(subscriptionsList.get(subscription).toFormattedPriceAsString());
                 subscriptionsList.remove(subscription);

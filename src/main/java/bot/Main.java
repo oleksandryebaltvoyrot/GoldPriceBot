@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpServer;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import services.PriceStorageService;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -26,7 +27,9 @@ public class Main {
             OutputStream output = exchange.getResponseBody();
             output.write(respText.getBytes());
             output.flush();
+            new PriceStorageService().getAll();
             new GoldPriceBotDB().dailyPriceCheck();
+            new PriceStorageService().getAll();
             exchange.close();
         }));
         server.setExecutor(null); // creates a default executor
