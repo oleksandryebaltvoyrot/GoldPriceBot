@@ -22,6 +22,7 @@ public class SubscriptionDBUtils {
         stmt.executeUpdate(sql);
         logger.info("create a table {}", sql);
         stmt.close();
+        connection.close();
     }
 
     public void createSubscriptionTable(Connection connection) {
@@ -48,6 +49,7 @@ public class SubscriptionDBUtils {
             PreparedStatement statement = creator.createPreparedStatement(connection);
             statement.executeUpdate();
             statement.close();
+            connection.close();
             logger.info("Price changed. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getSubscriptionName(), subscriptionPrice.getPrice());
         } catch (SQLException e) {
             logger.error(e.getMessage());
@@ -63,6 +65,7 @@ public class SubscriptionDBUtils {
             PreparedStatement statement = creator.createPreparedStatement(connection);
             statement.executeUpdate();
             statement.close();
+            connection.close();
             logger.info("Price updated. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getSubscriptionName(), subscriptionPrice.getPrice());
         } catch (SQLException e) {
             logger.error(e.getMessage());
@@ -83,6 +86,7 @@ public class SubscriptionDBUtils {
                 logger.info("=============================");
             }
             statement.close();
+            connection.close();
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }
@@ -101,6 +105,7 @@ public class SubscriptionDBUtils {
             price = resultSet.next() ? resultSet.getDouble(PRICE) : 0;
             logger.info("Price selected. NAME:{} PRICE:{}", subscription.getSubscriptionName(), price);
             statement.close();
+            connection.close();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
