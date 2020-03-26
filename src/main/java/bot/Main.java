@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpServer;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
-import services.PriceStorageService;
+import services.PriceStorage;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,7 +17,7 @@ public class Main {
 
         ApiContextInitializer.init();
         TelegramBotsApi botsApi = new TelegramBotsApi();
-        botsApi.registerBot(new GoldPriceBotDB());
+        botsApi.registerBot(new XboxSubscriptionCheckerBot());
 
         int serverPort = Integer.parseInt(System.getenv("PORT"));
         HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
@@ -27,9 +27,9 @@ public class Main {
             OutputStream output = exchange.getResponseBody();
             output.write(respText.getBytes());
             output.flush();
-            new PriceStorageService().getAll();
-            new GoldPriceBotDB().dailyPriceCheck();
-            new PriceStorageService().getAll();
+            new PriceStorage().createSubscriptionTable();
+            new XboxSubscriptionCheckerBot().dailyPriceCheck();
+            new PriceStorage().logTable();
             exchange.close();
         }));
         server.setExecutor(null); // creates a default executor

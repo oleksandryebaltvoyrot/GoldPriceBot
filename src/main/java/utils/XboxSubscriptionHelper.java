@@ -37,7 +37,7 @@ public class XboxSubscriptionHelper {
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string().trim().replace("\n", "").replace("\r", "");
         logger.info("status code " + response.code());
-        return responseBody;//.length() > 350000 ? responseBody : responseBody.substring(350000);
+        return responseBody;
     }
 
     public static List<XboxSubscriptionPrice> extractGoldPrice() throws IOException {
@@ -49,7 +49,7 @@ public class XboxSubscriptionHelper {
         if (matcher.find()) {
             return goldList.stream()
                     .map(frequency -> new XboxSubscriptionPrice()
-                            .setSubscriptionName(frequency)
+                            .setSubscription(frequency)
                             .setPrice(Double.valueOf(matcher.group(frequency.getRegExpCode()).trim())))
                     .collect(Collectors.toList());
         }
@@ -71,11 +71,11 @@ public class XboxSubscriptionHelper {
         Matcher matcher = PASS_PATTERN.matcher(out);
         if (matcher.find()) {
             return new XboxSubscriptionPrice()
-                    .setSubscriptionName(subscription)
+                    .setSubscription(subscription)
                     .setPrice(Double.valueOf(matcher.group(1).trim()));
         }
         logger.info("price not found");
-        return null;
+        return new XboxSubscriptionPrice().setPrice(0.0).setSubscription(subscription);
     }
 
     public String mapToString(Map<String, String> map) {

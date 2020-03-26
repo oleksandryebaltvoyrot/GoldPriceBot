@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import services.PriceStorageService;
+import services.PriceStorage;
 import utils.Emoji;
 
 import java.io.IOException;
@@ -20,9 +20,9 @@ import static enums.Subscriptions.*;
 import static utils.XboxSubscriptionHelper.*;
 
 
-public class GoldPriceBotDB extends TelegramLongPollingBot {
-    private static final Logger logger = LogManager.getLogger(GoldPriceBotDB.class);
-    PriceStorageService priceStorageService = new PriceStorageService();
+public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
+    private static final Logger logger = LogManager.getLogger(XboxSubscriptionCheckerBot.class);
+    private PriceStorage priceStorage = new PriceStorage();
 
     @Override
     public String getBotUsername() {
@@ -56,23 +56,22 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         // We check if the update has a message and the message has text
         if (update.hasMessage()) {
-            String request = update.getMessage().getText().toLowerCase();
-            String userId = update.getMessage().getChatId().toString();
-            Random rand = new Random();
-            String header = Arrays.asList(SimpleMessages.values()).get(rand.nextInt(SimpleMessages.values().length)).getMessage();
+            final String request = update.getMessage().getText().toLowerCase();
+            final String userId = update.getMessage().getChatId().toString();
+            String header = Arrays.asList(SimpleMessages.values()).get(new Random().nextInt(SimpleMessages.values().length)).getMessage();
             if (request.contains("gold")) {
                 List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE, GOLD_YEAR);
                 List<XboxSubscriptionPrice> priceList = goldList.stream().map(sub ->
-                        priceStorageService.getPriceBySubscription(sub)).collect(Collectors.toList());
+                        priceStorage.getPriceBySubscription(sub)).collect(Collectors.toList());
                 String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + "\n").collect(Collectors.joining());
                 sendPriceMessage(userId, String.format(header, "GOLD"), message);
             }
             if (request.contains("ultimate")) {
-                XboxSubscriptionPrice price = priceStorageService.getPriceBySubscription(ULTIMATE);
+                XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(ULTIMATE);
                 sendPriceMessage(userId, String.format(header, price.getSubscription()), price.toFormattedPriceAsString());
             }
             if (request.contains("game_pass")) {
-                XboxSubscriptionPrice price = priceStorageService.getPriceBySubscription(GAME_PASS);
+                XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(GAME_PASS);
                 sendPriceMessage(userId, String.format(header, price.getSubscription()), price.toFormattedPriceAsString());
             }
             if (request.contains("check")) {
@@ -105,8 +104,8 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
         subscriptionsList.put(Subscriptions.GAME_PASS, extractGamePassPrice());
 
         subscriptionsList.keySet().forEach(subscription -> {
-            if (!subscriptionsList.get(subscription).getPrice().equals(priceStorageService.getPriceBySubscription(subscription).getPrice())) {
-                priceStorageService.updatePrice(subscriptionsList.get(subscription));
+            if (!subscriptionsList.get(subscription).getPrice().equals(priceStorage.getPriceBySubscription(subscription).getPrice())) {
+                priceStorage.updatePrice(subscriptionsList.get(subscription));
                 sendPriceChangedMessage(subscriptionsList.get(subscription).toFormattedPriceAsString());
                 subscriptionsList.remove(subscription);
             }

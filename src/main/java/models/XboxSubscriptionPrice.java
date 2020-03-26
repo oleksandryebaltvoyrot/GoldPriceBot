@@ -14,7 +14,7 @@ public class XboxSubscriptionPrice {
         return subscriptionName;
     }
 
-    public XboxSubscriptionPrice setSubscriptionName(Subscriptions subscriptionName) {
+    public XboxSubscriptionPrice setSubscription(Subscriptions subscriptionName) {
         this.subscriptionName = subscriptionName;
         return this;
     }

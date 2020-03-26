@@ -1,10 +1,8 @@
-package services;
+package utils;
 
-import ca.krasnay.sqlbuilder.InsertCreator;
 import ca.krasnay.sqlbuilder.ParameterizedPreparedStatementCreator;
 import ca.krasnay.sqlbuilder.SelectCreator;
 import ca.krasnay.sqlbuilder.UpdateCreator;
-import enums.Storage;
 import enums.Subscriptions;
 import models.XboxSubscriptionPrice;
 import org.apache.logging.log4j.LogManager;
@@ -26,62 +24,68 @@ public class SubscriptionDBUtils {
         stmt.close();
     }
 
-    public void createSubscriptionTable(Connection connection) throws SQLException {
+    public void createSubscriptionTable(Connection connection) {
         String sql = "CREATE TABLE " + SUBSCRIPTIONS +
                 "(" + NAME + " TEXT PRIMARY KEY NOT NULL, "
                 + PRICE + " DOUBLE PRECISION NOT NULL)";
-        createTable(connection, sql);
+        try {
+            createTable(connection, sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-
-    public void insertPrice(Connection connection, Storage name, double price) throws SQLException {
-        PreparedStatement statement = new InsertCreator(SUBSCRIPTIONS)
-                .setValue(NAME, name.getStorageName())
-                .setValue(PRICE, price)
-                .createPreparedStatement(connection);
-        statement.executeUpdate();
-        logger.info("Price inserted. NAME:{} PRICE:{}", name.getStorageName(), price);
-        statement.close();
-    }
-
-    public void insertOrUpdatePrice(Connection connection, XboxSubscriptionPrice subscriptionPrice) throws SQLException {
-        PreparedStatement statement =
+    public void insertOrUpdatePrice(Connection connection, XboxSubscriptionPrice subscriptionPrice) {
+        ParameterizedPreparedStatementCreator creator =
                 new ParameterizedPreparedStatementCreator()
                         .setSql("INSERT INTO " + SUBSCRIPTIONS + " (" + NAME + "," + PRICE + ") " +
                                 "VALUES (:name, :price) " +
                                 "ON CONFLICT (" + NAME + ") " +
                                 "DO UPDATE SET " + PRICE + "=:price;")
                         .setParameter("name", subscriptionPrice.getSubscription().getSubscriptionName())
-                        .setParameter("price", subscriptionPrice.getPrice()).createPreparedStatement(connection);
-        statement.executeUpdate();
-        logger.info("Price changed. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getSubscriptionName(), subscriptionPrice.getPrice());
-        statement.close();
+                        .setParameter("price", subscriptionPrice.getPrice());
+        try {
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            statement.executeUpdate();
+            statement.close();
+            logger.info("Price changed. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getSubscriptionName(), subscriptionPrice.getPrice());
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
     }
 
-    public void updatePrice(Connection connection, XboxSubscriptionPrice subscriptionPrice) throws SQLException {
-        PreparedStatement statement =
+    public void updatePrice(Connection connection, XboxSubscriptionPrice subscriptionPrice) {
+        UpdateCreator creator =
                 new UpdateCreator(SUBSCRIPTIONS)
                         .setValue(PRICE, subscriptionPrice.getPrice())
-                        .whereEquals(NAME, subscriptionPrice.getSubscription().getSubscriptionName())
-                        .createPreparedStatement(connection);
-        logger.info("Price updated. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getSubscriptionName(), subscriptionPrice.getPrice());
-        statement.executeUpdate();
-        statement.close();
+                        .whereEquals(NAME, subscriptionPrice.getSubscription().getSubscriptionName());
+        try {
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            statement.executeUpdate();
+            statement.close();
+            logger.info("Price updated. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getSubscriptionName(), subscriptionPrice.getPrice());
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
     }
 
-    public void selectAll(Connection connection) throws SQLException {
-        PreparedStatement statement = new SelectCreator()
+    public void selectAll(Connection connection) {
+        SelectCreator selector = new SelectCreator()
                 .column("*")
-                .from(SUBSCRIPTIONS)
-                .createPreparedStatement(connection);
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            logger.info("=============================");
-            logger.info("NAME {}", resultSet.getString(NAME));
-            logger.info("PRICE {}", resultSet.getString(PRICE));
-            logger.info("=============================");
+                .from(SUBSCRIPTIONS);
+        try {
+            PreparedStatement statement = selector.createPreparedStatement(connection);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                logger.info("=============================");
+                logger.info("NAME {}", resultSet.getString(NAME));
+                logger.info("PRICE {}", resultSet.getString(PRICE));
+                logger.info("=============================");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
         }
-        statement.close();
     }
 
     public XboxSubscriptionPrice selectPrice(Connection connection, Subscriptions subscription) {
@@ -100,6 +104,6 @@ public class SubscriptionDBUtils {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        return new XboxSubscriptionPrice().setPrice(price).setSubscriptionName(subscription);
+        return new XboxSubscriptionPrice().setPrice(price).setSubscription(subscription);
     }
 }

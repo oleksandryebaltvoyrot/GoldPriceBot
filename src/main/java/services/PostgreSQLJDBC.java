@@ -14,21 +14,20 @@ public class PostgreSQLJDBC {
 
 
     public static Connection getConnection() {
-        try {
-            URI dbUri = new URI(System.getenv("DATABASE_URL"));
-
-            String username = dbUri.getUserInfo().split(":")[0];
-            String password = dbUri.getUserInfo().split(":")[1];
-            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
-            logger.info("connecting to DB {}", dbUrl);
-            if (connection == null) {
+        if (connection == null) {
+            try {
+                URI dbUri = new URI(System.getenv("DATABASE_URL"));
+                String username = dbUri.getUserInfo().split(":")[0];
+                String password = dbUri.getUserInfo().split(":")[1];
+                String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+                logger.info("connecting to DB {}", dbUrl);
                 return DriverManager.getConnection(dbUrl, username, password);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
             }
-            return connection;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
         }
-        return null;
+        return connection;
     }
+
 }
 
