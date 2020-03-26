@@ -50,7 +50,7 @@ public class XboxSubscriptionHelper {
             return goldList.stream()
                     .map(frequency -> new XboxSubscriptionPrice()
                             .setSubscriptionName(frequency)
-                            .setPrice(Double.valueOf(matcher.group(frequency.getFrequency()).trim())))
+                            .setPrice(Double.valueOf(matcher.group(frequency.getRegExpCode()).trim())))
                     .collect(Collectors.toList());
         }
         logger.info("price not found");
