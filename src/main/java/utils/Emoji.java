@@ -21,6 +21,8 @@ public class Emoji {
     public static final String SMALL_RED_TRIANGLE_DOWN = EmojiParser.parseToUnicode(":small_red_triangle_down:");
     public static final String TADA = EmojiParser.parseToUnicode(":tada:");
     public static final String WARNING = EmojiParser.parseToUnicode(":warning:");
+    public static final String POUND = EmojiParser.parseToUnicode(":pound:");
+
 
 
 }
