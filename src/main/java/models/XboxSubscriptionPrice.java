@@ -48,9 +48,9 @@ public class XboxSubscriptionPrice {
     }
 
     public String toFormattedPriceAsString() {
-        return WHITE_CHECK_MARK +
-                subscriptionName.name() +
-                HEAVY_MULTIPLICATION_X +
+        return WHITE_CHECK_MARK +" "+
+                subscriptionName.name() +" "+
+                HEAVY_MULTIPLICATION_X +" "+
                 price +
                 POUND;
     }

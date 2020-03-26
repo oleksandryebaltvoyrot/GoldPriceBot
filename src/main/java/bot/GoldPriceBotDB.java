@@ -79,9 +79,8 @@ public class GoldPriceBotDB extends TelegramLongPollingBot {
                 try {
                     List<XboxSubscriptionPrice> subscriptionsWithoutChanges = dailyPriceCheck();
                     if (!subscriptionsWithoutChanges.isEmpty()) {
-                        subscriptionsWithoutChanges.forEach(subscription -> {
-                            sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, subscription.toFormattedPriceAsString());
-                        });
+                        String message = subscriptionsWithoutChanges.stream().map(price -> price.toFormattedPriceAsString() + "\n").collect(Collectors.joining());
+                        sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, message);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
