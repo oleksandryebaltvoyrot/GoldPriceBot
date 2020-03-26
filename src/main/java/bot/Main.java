@@ -16,7 +16,7 @@ public class Main {
 
         ApiContextInitializer.init();
         TelegramBotsApi botsApi = new TelegramBotsApi();
-        botsApi.registerBot(new GoldPriceBot());
+        botsApi.registerBot(new GoldPriceBotDB());
 
         int serverPort = Integer.parseInt(System.getenv("PORT"));
         HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
@@ -26,7 +26,7 @@ public class Main {
             OutputStream output = exchange.getResponseBody();
             output.write(respText.getBytes());
             output.flush();
-            new GoldPriceBot().dailyPriceCheck();
+            new GoldPriceBotDB().dailyPriceCheck();
             exchange.close();
         }));
         server.setExecutor(null); // creates a default executor
