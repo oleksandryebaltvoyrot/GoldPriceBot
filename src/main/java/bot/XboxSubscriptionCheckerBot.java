@@ -98,10 +98,12 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                     .orElseThrow(NoSuchElementException::new)
                     .getSubscription().name().length();
 
-            return subscriptionsWithoutChanges.stream()
+            String str = subscriptionsWithoutChanges.stream()
                     .sorted(Comparator.comparingDouble(XboxSubscriptionPrice::getPrice))
                     .map(price -> price.toFormattedPriceAsString(maxNameLength, maxPriceLength) + "\n")
                     .collect(Collectors.joining());
+            return " | " + VIDEO_GAME + " | " + MONEY_EMOJI+ " | "
+                    + "|--------|-------|" + str;
         }
         return WARNING + " Something went wrong. Call the police !!!";
 
