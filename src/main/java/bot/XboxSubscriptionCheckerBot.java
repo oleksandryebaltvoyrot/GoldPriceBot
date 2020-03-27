@@ -1,5 +1,6 @@
 package bot;
 
+import com.google.common.base.Strings;
 import enums.SimpleMessages;
 import enums.Subscriptions;
 import models.XboxSubscriptionPrice;
@@ -102,8 +103,8 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                     .sorted(Comparator.comparingDouble(XboxSubscriptionPrice::getPrice))
                     .map(price -> price.toFormattedPriceAsString(maxNameLength, maxPriceLength) + "\n")
                     .collect(Collectors.joining());
-            return " | " + VIDEO_GAME + " | " + MONEY_EMOJI+ " | "
-                    + "|--------|-------|" + str;
+            return " | " + VIDEO_GAME + " | " + MONEY_EMOJI + " | " + "\n"
+                    + "| " + Strings.padEnd("", maxNameLength, '-') + " | " + Strings.padEnd("", maxPriceLength, '-') + " |" + "\n" + str;
         }
         return WARNING + " Something went wrong. Call the police !!!";
 
