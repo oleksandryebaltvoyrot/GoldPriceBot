@@ -90,7 +90,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
         if (!subscriptionsWithoutChanges.isEmpty()) {
 
             return subscriptionsWithoutChanges.stream()
-                    .sorted(Comparator.comparingDouble(i->i.getSubscription().name().length()))
+                    .sorted(Comparator.comparingInt(i -> i.getSubscription().getRegExpCode()))
                     .map(price -> price.toFormattedPriceAsString() + "\n")
                     .collect(Collectors.joining());
         }
