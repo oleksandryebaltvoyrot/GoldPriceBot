@@ -4,8 +4,7 @@ import enums.Subscriptions;
 
 import java.util.Objects;
 
-import static utils.Emoji.HEAVY_MULTIPLICATION_X;
-import static utils.Emoji.POUND;
+import static utils.Emoji.*;
 
 public class XboxSubscriptionPrice {
     private Subscriptions subscriptionName;
@@ -48,13 +47,12 @@ public class XboxSubscriptionPrice {
         return String.format("%s::%s", subscriptionName, price);
     }
 
-    public String toFormattedPriceAsString(int nameWidth, int priceWidth) {
-        return " | " + HEAVY_MULTIPLICATION_X + subscriptionName.name().replace("_", " ") + HEAVY_MULTIPLICATION_X
-                        + " | _" + price + "_ " + POUND + " | ";
-    }
-
     public String toFormattedPriceAsString() {
-        return toFormattedPriceAsString(subscriptionName.name().length(), price.toString().length());
+        return WHITE_CHECK_MARK +
+                "*" + subscriptionName.name().replace("_", " ") + "*" +
+                HEAVY_MULTIPLICATION_X +
+                "_" + price + "_" +
+                POUND;
     }
 
 }

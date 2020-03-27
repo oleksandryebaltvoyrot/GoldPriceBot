@@ -1,6 +1,5 @@
 package bot;
 
-import com.google.common.base.Strings;
 import enums.SimpleMessages;
 import enums.Subscriptions;
 import models.XboxSubscriptionPrice;
@@ -89,22 +88,11 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
 
     private String createNotUdatedSubscriptionMessage(List<XboxSubscriptionPrice> subscriptionsWithoutChanges) {
         if (!subscriptionsWithoutChanges.isEmpty()) {
-            int maxPriceLength = subscriptionsWithoutChanges.stream()
-                    .max(Comparator.comparingDouble(XboxSubscriptionPrice::getPrice))
-                    .orElseThrow(NoSuchElementException::new)
-                    .getPrice().toString().length();
 
-            int maxNameLength = subscriptionsWithoutChanges.stream()
-                    .max(Comparator.comparingInt(i -> i.getSubscription().name().length()))
-                    .orElseThrow(NoSuchElementException::new)
-                    .getSubscription().name().length();
-
-            String str = subscriptionsWithoutChanges.stream()
-                    .sorted(Comparator.comparingDouble(XboxSubscriptionPrice::getPrice))
-                    .map(price -> price.toFormattedPriceAsString(maxNameLength, maxPriceLength) + "\n")
+            return subscriptionsWithoutChanges.stream()
+                    .sorted(Comparator.comparingDouble(i->i.getSubscription().name().length()))
+                    .map(price -> price.toFormattedPriceAsString() + "\n")
                     .collect(Collectors.joining());
-            return " | " + VIDEO_GAME + " | " + MONEY_EMOJI + " | " + "\n"
-                    + "| " + Strings.padEnd("", maxNameLength, '-') + " | " + Strings.padEnd("", maxPriceLength, '-') + " |" + "\n" + str;
         }
         return WARNING + " Something went wrong. Call the police !!!";
 
