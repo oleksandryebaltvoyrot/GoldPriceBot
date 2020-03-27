@@ -43,14 +43,14 @@ public class SubscriptionDBUtils {
                                 "VALUES (:name, :price) " +
                                 "ON CONFLICT (" + NAME + ") " +
                                 "DO UPDATE SET " + PRICE + "=:price;")
-                        .setParameter("name", subscriptionPrice.getSubscription().getSubscriptionName())
+                        .setParameter("name", subscriptionPrice.getSubscription().getDBColumnName())
                         .setParameter("price", subscriptionPrice.getPrice());
         try {
             PreparedStatement statement = creator.createPreparedStatement(connection);
             statement.executeUpdate();
             statement.close();
             connection.close();
-            logger.info("Price changed. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getSubscriptionName(), subscriptionPrice.getPrice());
+            logger.info("Price changed. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getDBColumnName(), subscriptionPrice.getPrice());
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }
@@ -60,13 +60,13 @@ public class SubscriptionDBUtils {
         UpdateCreator creator =
                 new UpdateCreator(SUBSCRIPTIONS)
                         .setValue(PRICE, subscriptionPrice.getPrice())
-                        .whereEquals(NAME, subscriptionPrice.getSubscription().getSubscriptionName());
+                        .whereEquals(NAME, subscriptionPrice.getSubscription().getDBColumnName());
         try {
             PreparedStatement statement = creator.createPreparedStatement(connection);
             statement.executeUpdate();
             statement.close();
             connection.close();
-            logger.info("Price updated. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getSubscriptionName(), subscriptionPrice.getPrice());
+            logger.info("Price updated. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getDBColumnName(), subscriptionPrice.getPrice());
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }
@@ -98,12 +98,12 @@ public class SubscriptionDBUtils {
                 new SelectCreator()
                         .column(PRICE)
                         .from(SUBSCRIPTIONS)
-                        .whereEquals(NAME, subscription.getSubscriptionName());
+                        .whereEquals(NAME, subscription.getDBColumnName());
         try {
             PreparedStatement statement = selector.createPreparedStatement(connection);
             ResultSet resultSet = statement.executeQuery();
             price = resultSet.next() ? resultSet.getDouble(PRICE) : 0;
-            logger.info("Price selected. NAME:{} PRICE:{}", subscription.getSubscriptionName(), price);
+            logger.info("Price selected. NAME:{} PRICE:{}", subscription.getDBColumnName(), price);
             statement.close();
             connection.close();
         } catch (Exception e) {

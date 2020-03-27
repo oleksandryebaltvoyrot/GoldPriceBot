@@ -68,7 +68,7 @@ public class XboxSubscriptionHelper {
 
     private static XboxSubscriptionPrice extractGamePassPrice(Subscriptions subscription, String url) throws IOException {
         String out = run(url);
-        logger.info("start looking for " + subscription.getSubscriptionName());
+        logger.info("start looking for " + subscription.getDBColumnName());
         Matcher matcher = PASS_PATTERN.matcher(out);
         if (matcher.find()) {
             return new XboxSubscriptionPrice()

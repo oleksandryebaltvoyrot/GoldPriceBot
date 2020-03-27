@@ -7,16 +7,16 @@ public enum Subscriptions {
     ULTIMATE("ultimate", 1),
     GAME_PASS("game_pass", 1);
 
-    private final String name;
+    private final String dbColumnName;
     private final int regExpCode;
 
-    Subscriptions(String name, int code) {
-        this.name = name;
+    Subscriptions(String dbColumnName, int code) {
+        this.dbColumnName = dbColumnName;
         this.regExpCode = code;
     }
 
-    public String getSubscriptionName() {
-        return name;
+    public String getDBColumnName() {
+        return dbColumnName;
     }
 
     public int getRegExpCode() {

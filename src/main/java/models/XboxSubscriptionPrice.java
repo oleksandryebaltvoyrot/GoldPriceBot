@@ -50,11 +50,11 @@ public class XboxSubscriptionPrice {
 
     public String toFormattedPriceAsString(int nameWidth, int priceWidth) {
         String format = HEAVY_MULTIPLICATION_X + " %" + nameWidth + "s " + HEAVY_MULTIPLICATION_X + " %-" + priceWidth + "s " + POUND;
-        return String.format(format, subscriptionName.getSubscriptionName(), price.toString());
+        return String.format(format, subscriptionName.name(), price.toString());
     }
 
     public String toFormattedPriceAsString() {
-        return toFormattedPriceAsString(subscriptionName.getSubscriptionName().length(), price.toString().length());
+        return toFormattedPriceAsString(subscriptionName.name().length(), price.toString().length());
     }
 
 }
