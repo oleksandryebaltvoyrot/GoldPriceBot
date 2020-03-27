@@ -46,11 +46,11 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
 ////
 ////    @Override
 ////    public String getBotToken() {
-////        return "356162982:AAGFOsyBumDpMw0nUiSw3pg7WCejrmT0SvA";
+////        return "";
 ////    }
 ////
 ////    public String getChatList() {
-////        return "117209127";
+////        return "";
 ////    }
 
     @Override
