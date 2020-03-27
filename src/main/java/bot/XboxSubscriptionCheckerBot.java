@@ -97,11 +97,10 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                     .max(Comparator.comparingInt(i -> i.getSubscription().name().length()))
                     .orElseThrow(NoSuchElementException::new)
                     .getSubscription().name().length();
-            logger.debug("max price {} max name {}", maxPriceLength, maxNameLength);
 
             return subscriptionsWithoutChanges.stream()
                     .sorted(Comparator.comparingDouble(XboxSubscriptionPrice::getPrice))
-                    .map(price -> price.toFormattedPriceAsString(maxPriceLength, maxNameLength) + "\n")
+                    .map(price -> price.toFormattedPriceAsString(maxNameLength, maxPriceLength) + "\n")
                     .collect(Collectors.joining());
         }
         return WARNING + " Something went wrong. Call the police !!!";
