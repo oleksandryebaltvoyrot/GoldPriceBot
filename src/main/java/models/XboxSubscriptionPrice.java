@@ -48,12 +48,13 @@ public class XboxSubscriptionPrice {
         return String.format("%s::%s", subscriptionName, price);
     }
 
+    public String toFormattedPriceAsString(int nameWidth, int priceWidth) {
+        String format = HEAVY_MULTIPLICATION_X + " %" + nameWidth + "s " + HEAVY_MULTIPLICATION_X + " %-" + priceWidth + "s " + POUND;
+        return String.format(format, subscriptionName.getSubscriptionName(), price.toString());
+    }
+
     public String toFormattedPriceAsString() {
-        return HEAVY_MULTIPLICATION_X +" "+
-                subscriptionName.name() +" "+
-                HEAVY_MULTIPLICATION_X +" "+
-                price +
-                POUND;
+        return toFormattedPriceAsString(subscriptionName.getSubscriptionName().length(), price.toString().length());
     }
 
 }

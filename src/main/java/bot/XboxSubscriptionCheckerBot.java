@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static enums.Subscriptions.*;
-import static utils.Emoji.SMALL_RED_TRIANGLE;
-import static utils.Emoji.SMALL_RED_TRIANGLE_DOWN;
+import static utils.Emoji.*;
 import static utils.XboxSubscriptionHelper.*;
 
 
@@ -78,19 +77,34 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
             }
             if (request.contains("check")) {
                 try {
-                    List<XboxSubscriptionPrice> subscriptionsWithoutChanges = dailyPriceCheck();
-                    if (!subscriptionsWithoutChanges.isEmpty()) {
-                        String message = subscriptionsWithoutChanges.stream()
-                                .sorted(Comparator.comparingDouble(XboxSubscriptionPrice::getPrice))
-                                .map(price -> price.toFormattedPriceAsString() + "\n")
-                                .collect(Collectors.joining());
-                        sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, message);
-                    }
+                    String message = createNotUdatedSubscriptionMessage(dailyPriceCheck());
+                    sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, message);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    private String createNotUdatedSubscriptionMessage(List<XboxSubscriptionPrice> subscriptionsWithoutChanges) {
+        if (!subscriptionsWithoutChanges.isEmpty()) {
+            int maxPriceLength = subscriptionsWithoutChanges.stream()
+                    .max(Comparator.comparingDouble(XboxSubscriptionPrice::getPrice))
+                    .orElseThrow(NoSuchElementException::new)
+                    .getPrice().toString().length();
+
+            int maxNameLength = subscriptionsWithoutChanges.stream()
+                    .max(Comparator.comparingInt(i -> i.getSubscription().name().length()))
+                    .orElseThrow(NoSuchElementException::new)
+                    .getSubscription().name().length();
+
+            return subscriptionsWithoutChanges.stream()
+                    .sorted(Comparator.comparingDouble(XboxSubscriptionPrice::getPrice))
+                    .map(price -> price.toFormattedPriceAsString(maxPriceLength, maxNameLength) + "\n")
+                    .collect(Collectors.joining());
+        }
+        return WARNING + " Something went wrong. Call the police !!!";
+
     }
 
     public void sendPriceChangedMessage(String price) {
