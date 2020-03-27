@@ -1,8 +1,6 @@
 package bot;
 
 import com.sun.net.httpserver.HttpServer;
-import enums.Subscriptions;
-import models.XboxSubscriptionPrice;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
@@ -16,7 +14,6 @@ public class Main {
     public static void main(String[] args) throws IOException, TelegramApiRequestException {
 
         //heroku ps:scale worker=1 -a xboxsubscriptionchecker
-        String t = new XboxSubscriptionPrice().setPrice(40.99).setSubscription(Subscriptions.ULTIMATE).toFormattedPriceAsString();
 
         ApiContextInitializer.init();
         TelegramBotsApi botsApi = new TelegramBotsApi();
