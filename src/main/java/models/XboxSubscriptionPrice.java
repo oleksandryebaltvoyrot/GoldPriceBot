@@ -51,7 +51,7 @@ public class XboxSubscriptionPrice {
 
     public String toFormattedPriceAsString(int nameWidth, int priceWidth) {
         return HEAVY_MULTIPLICATION_X
-                + " " + Strings.padEnd(subscriptionName.name(), nameWidth*2, ' ')
+                + " " + Strings.padEnd(subscriptionName.name(), (subscriptionName.name().length()-nameWidth)*2, ' ')
                 + " " + HEAVY_MULTIPLICATION_X
                 + " " + Strings.padStart(price.toString(), priceWidth, ' ')
                 + " " + POUND;
