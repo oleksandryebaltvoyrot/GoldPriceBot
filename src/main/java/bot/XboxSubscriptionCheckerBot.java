@@ -91,6 +91,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
 
             return subscriptionsWithoutChanges.stream()
                     .sorted(Comparator.comparingInt(i -> i.getSubscription().getRegExpCode()))
+                    .distinct()
                     .map(price -> price.toFormattedPriceAsString() + "\n")
                     .collect(Collectors.joining());
         }

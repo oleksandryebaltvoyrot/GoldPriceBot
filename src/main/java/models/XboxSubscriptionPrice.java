@@ -50,7 +50,7 @@ public class XboxSubscriptionPrice {
 
     public String toFormattedPriceAsString() {
         return HEAVY_MULTIPLICATION_X +
-                " *" + subscriptionName.name().replace("_", " ") + "* " +
+                " " + subscriptionName.name().replace("_", " ") + " " +
                 HEAVY_MULTIPLICATION_X +
                 " _" + price + "_ " +
                 POUND;
