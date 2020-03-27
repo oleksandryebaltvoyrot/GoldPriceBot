@@ -88,10 +88,10 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
 
     private String createNotUdatedSubscriptionMessage(List<XboxSubscriptionPrice> subscriptionsWithoutChanges) {
         if (!subscriptionsWithoutChanges.isEmpty()) {
-
-            return subscriptionsWithoutChanges.stream()
-                    .sorted(Comparator.comparingInt(i -> i.getSubscription().getRegExpCode()))
-                    .distinct()
+            List<XboxSubscriptionPrice> list = subscriptionsWithoutChanges.stream()
+                    .sorted(Comparator.comparingInt(i -> i.getSubscription().getRegExpCode())).collect(Collectors.toList());
+            Collections.reverse(list);
+            return list.stream()
                     .map(price -> price.toFormattedPriceAsString() + "\n")
                     .collect(Collectors.joining());
         }
