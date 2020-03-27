@@ -1,6 +1,5 @@
 package models;
 
-import com.google.common.base.Strings;
 import enums.Subscriptions;
 
 import java.util.Objects;
@@ -51,10 +50,10 @@ public class XboxSubscriptionPrice {
 
     public String toFormattedPriceAsString(int nameWidth, int priceWidth) {
         return HEAVY_MULTIPLICATION_X
-                + " " + Strings.padEnd(subscriptionName.name(), nameWidth, '_')
-                + " " + HEAVY_MULTIPLICATION_X
-                + " " + Strings.padStart(price.toString(), priceWidth, ' ')
-                + " " + POUND;
+                + " | " + subscriptionName.name()
+                + " | " + HEAVY_MULTIPLICATION_X
+                + " | _" + price
+                + "_ | " + POUND;
     }
 
     public String toFormattedPriceAsString() {

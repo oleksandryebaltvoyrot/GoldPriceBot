@@ -143,7 +143,8 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
     void sendPriceMessage(String chatId, String header, String price) {
         SendMessage message = new SendMessage()
                 .setChatId(chatId)
-                .setText(header + "\n\n" + price);
+                .setText(header + "\n\n" + price)
+                .enableMarkdown(true);
         try {
             execute(message);
             logger.info(message);
