@@ -69,11 +69,11 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
             }
             if (request.contains("ultimate")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(ULTIMATE);
-                sendPriceMessage(userId, String.format(header, price.getSubscription()), price.toFormattedPriceAsString());
+                sendPriceMessage(userId, String.format(header, price.getSubscription().name()), price.toFormattedPriceAsString());
             }
             if (request.contains("game_pass")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(GAME_PASS);
-                sendPriceMessage(userId, String.format(header, price.getSubscription()), price.toFormattedPriceAsString());
+                sendPriceMessage(userId, String.format(header, price.getSubscription().name().replace("_", " ")), price.toFormattedPriceAsString());
             }
             if (request.contains("check")) {
                 try {

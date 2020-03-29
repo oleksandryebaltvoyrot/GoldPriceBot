@@ -85,5 +85,4 @@ public class XboxSubscriptionHelper {
                 .collect(Collectors.joining(", \n"));
     }
 
-
 }
