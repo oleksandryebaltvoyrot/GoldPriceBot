@@ -29,7 +29,7 @@ public class SubscriptionDBUtils {
     public void createSubscriptionTable(Connection connection) {
         String sql = "CREATE TABLE " + SUBSCRIPTIONS +
                 "(" + NAME + " TEXT PRIMARY KEY NOT NULL, "
-                + DATE + " TEXT PRIMARY KEY NOT NULL, "
+                + DATE + " TEXT NOT NULL, "
                 + PRICE + " DOUBLE PRECISION NOT NULL)";
         try {
             createTable(connection, sql);
