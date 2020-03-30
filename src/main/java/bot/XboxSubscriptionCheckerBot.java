@@ -26,6 +26,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
     private PriceStorage priceStorage = new PriceStorage();
     private static final String DEFAULT_LOGO_PATH = "src/main/resources/logo/default.jpg";
     private static final String UPDATED_LOGO_PATH = "src/main/resources/logo/updated.jpg";
+    private static final String LAST_TIME_WAS_CHANGED = "\n _last time was changed: ";
 
     @Override
     public String getBotUsername() {
@@ -66,16 +67,16 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                 List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE, GOLD_YEAR);
                 List<XboxSubscriptionPrice> priceList = goldList.stream().map(sub ->
                         priceStorage.getPriceBySubscription(sub)).collect(Collectors.toList());
-                String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + "\n _last update: " + price.getLastUpdate() + "_ \n").collect(Collectors.joining());
+                String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + LAST_TIME_WAS_CHANGED + price.getLastUpdate() + "_ \n").collect(Collectors.joining());
                 sendPricePhotoMessage(userId, message, goldList.get(1).getLogoPath());
             }
             if (request.contains("ultimate")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(ULTIMATE);
-                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + "\n _last update: " + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
+                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + LAST_TIME_WAS_CHANGED + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
             }
             if (request.contains("game_pass")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(GAME_PASS);
-                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + "\n _last update: " + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
+                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + LAST_TIME_WAS_CHANGED + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
             }
             if (request.contains("check")) {
                 try {
