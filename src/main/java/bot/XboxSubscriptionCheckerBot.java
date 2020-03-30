@@ -8,7 +8,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import services.PriceStorage;
-import utils.Emoji;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +80,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
             if (request.contains("check")) {
                 try {
                     String message = createNotUdatedSubscriptionMessage(dailyPriceCheck());
-                    sendPricePhotoMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI + "\n", message, "");
+                    sendPricePhotoMessage(userId, "*SUBSCRIPTIONS* _price for UK in GBP_ " + ALIEN_EMOJI + "\n", message, "");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
