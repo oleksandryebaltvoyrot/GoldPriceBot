@@ -10,6 +10,7 @@ import static utils.Emoji.POUND;
 public class XboxSubscriptionPrice {
     private Subscriptions subscriptionName;
     private Double price;
+    private String lastUpdate = "never";
 
     public Subscriptions getSubscription() {
         return subscriptionName;
@@ -26,6 +27,15 @@ public class XboxSubscriptionPrice {
 
     public XboxSubscriptionPrice setPrice(Double price) {
         this.price = price;
+        return this;
+    }
+
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public XboxSubscriptionPrice setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
         return this;
     }
 

@@ -15,6 +15,7 @@ public class SubscriptionDBUtils {
 
     private static final String NAME = "NAME";
     private static final String PRICE = "PRICE";
+    private static final String DATE = "DATE";
     private static final String SUBSCRIPTIONS = "SUBSCRIPTIONS";
 
     public void createTable(Connection connection, String sql) throws SQLException {
@@ -28,6 +29,7 @@ public class SubscriptionDBUtils {
     public void createSubscriptionTable(Connection connection) {
         String sql = "CREATE TABLE " + SUBSCRIPTIONS +
                 "(" + NAME + " TEXT PRIMARY KEY NOT NULL, "
+                + DATE + " TEXT PRIMARY KEY NOT NULL, "
                 + PRICE + " DOUBLE PRECISION NOT NULL)";
         try {
             createTable(connection, sql);
@@ -39,11 +41,12 @@ public class SubscriptionDBUtils {
     public void insertOrUpdatePrice(Connection connection, XboxSubscriptionPrice subscriptionPrice) {
         ParameterizedPreparedStatementCreator creator =
                 new ParameterizedPreparedStatementCreator()
-                        .setSql("INSERT INTO " + SUBSCRIPTIONS + " (" + NAME + "," + PRICE + ") " +
-                                "VALUES (:name, :price) " +
+                        .setSql("INSERT INTO " + SUBSCRIPTIONS + " (" + NAME + "," + PRICE + "," + DATE + ") " +
+                                "VALUES (:name, :price, :date) " +
                                 "ON CONFLICT (" + NAME + ") " +
-                                "DO UPDATE SET " + PRICE + "=:price;")
+                                "DO UPDATE SET " + DATE + "=:date, " + PRICE + "=:price;")
                         .setParameter("name", subscriptionPrice.getSubscription().getDBColumnName())
+                        .setParameter("date", subscriptionPrice.getLastUpdate())
                         .setParameter("price", subscriptionPrice.getPrice());
         try {
             PreparedStatement statement = creator.createPreparedStatement(connection);
@@ -60,6 +63,7 @@ public class SubscriptionDBUtils {
         UpdateCreator creator =
                 new UpdateCreator(SUBSCRIPTIONS)
                         .setValue(PRICE, subscriptionPrice.getPrice())
+                        .setValue(DATE, subscriptionPrice.getLastUpdate())
                         .whereEquals(NAME, subscriptionPrice.getSubscription().getDBColumnName());
         try {
             PreparedStatement statement = creator.createPreparedStatement(connection);
@@ -83,6 +87,7 @@ public class SubscriptionDBUtils {
                 logger.info("=============================");
                 logger.info("NAME {}", resultSet.getString(NAME));
                 logger.info("PRICE {}", resultSet.getString(PRICE));
+                logger.info("LAST UPDATES {}", resultSet.getString(DATE));
                 logger.info("=============================");
             }
             statement.close();
@@ -94,21 +99,28 @@ public class SubscriptionDBUtils {
 
     public XboxSubscriptionPrice selectPrice(Connection connection, Subscriptions subscription) {
         double price = 0;
+        String date = "never";
         SelectCreator selector =
                 new SelectCreator()
                         .column(PRICE)
+                        .column(DATE)
                         .from(SUBSCRIPTIONS)
                         .whereEquals(NAME, subscription.getDBColumnName());
         try {
             PreparedStatement statement = selector.createPreparedStatement(connection);
             ResultSet resultSet = statement.executeQuery();
-            price = resultSet.next() ? resultSet.getDouble(PRICE) : 0;
+            price = resultSet.next() ? resultSet.getDouble(PRICE) : price;
+            date = resultSet.next() ? resultSet.getString(DATE) : date;
             logger.info("Price selected. NAME:{} PRICE:{}", subscription.getDBColumnName(), price);
             statement.close();
             connection.close();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        return new XboxSubscriptionPrice().setPrice(price).setSubscription(subscription);
+        return new XboxSubscriptionPrice().setPrice(price).setSubscription(subscription).setLastUpdate(date);
+    }
+
+    public void insertOrUpdateDate(Connection connection, String date) {
+
     }
 }

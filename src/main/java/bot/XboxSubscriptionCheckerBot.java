@@ -12,6 +12,7 @@ import utils.Emoji;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -65,16 +66,16 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                 List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE, GOLD_YEAR);
                 List<XboxSubscriptionPrice> priceList = goldList.stream().map(sub ->
                         priceStorage.getPriceBySubscription(sub)).collect(Collectors.toList());
-                String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + "\n").collect(Collectors.joining());
+                String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + " _last update_" + price.getLastUpdate() + "\n").collect(Collectors.joining());
                 sendPricePhotoMessage(userId, message, goldList.get(1).getLogoPath());
             }
             if (request.contains("ultimate")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(ULTIMATE);
-                sendPricePhotoMessage(userId, price.toFormattedPriceAsString(), price.getSubscription().getLogoPath());
+                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + " _last update_" + price.getLastUpdate(), price.getSubscription().getLogoPath());
             }
             if (request.contains("game_pass")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(GAME_PASS);
-                sendPricePhotoMessage(userId, price.toFormattedPriceAsString(), price.getSubscription().getLogoPath());
+                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + " _last update_" + price.getLastUpdate(), price.getSubscription().getLogoPath());
             }
             if (request.contains("check")) {
                 try {
@@ -116,10 +117,12 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
         subscriptionsList.put(Subscriptions.GAME_PASS, extractGamePassPrice());
 
         subscriptionsList.keySet().forEach(subscription -> {
+                    String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
                     XboxSubscriptionPrice newSPrice = subscriptionsList.get(subscription);
                     Double newPrice = newSPrice.getPrice();
                     Double oldPrice = priceStorage.getPriceBySubscription(subscription).getPrice();
                     if (!newPrice.equals(oldPrice)) {
+                        newSPrice.setLastUpdate(date);
                         priceStorage.updatePrice(newSPrice);
                         if (newPrice > oldPrice) {
                             sendPriceChangedMessage(SMALL_RED_TRIANGLE + " " + subscriptionsList.get(subscription).toFormattedPriceAsString(), subscription.getLogoPath());
