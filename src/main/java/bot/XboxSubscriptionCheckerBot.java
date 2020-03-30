@@ -26,6 +26,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
     private static final Logger logger = LogManager.getLogger(XboxSubscriptionCheckerBot.class);
     private PriceStorage priceStorage = new PriceStorage();
     private static final String DEFAULT_LOGO_PATH = "src/main/resources/logo/default.jpg";
+    private static final String UPDATED_LOGO_PATH = "src/main/resources/logo/updated.jpg";
 
     @Override
     public String getBotUsername() {
@@ -102,7 +103,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
     }
 
     public void sendPriceChangedMessage(String price, String logoPath) {
-        final String headerMessage = String.format("%s Price was changed %s", Emoji.ROTATING_LIGHT, Emoji.ROTATING_LIGHT);
+        final String headerMessage = String.format("%s Price was changed %s", Emoji.VIDEO_GAME, Emoji.VIDEO_GAME);
         Stream.of(getChatList().split(","))
                 .forEach(user -> sendPricePhotoMessage(user, headerMessage, price, logoPath));
     }
@@ -117,7 +118,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
         subscriptionsList.put(Subscriptions.GAME_PASS, extractGamePassPrice());
 
         subscriptionsList.keySet().forEach(subscription -> {
-                    String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                    String date = new SimpleDateFormat("dd MMMM yyyy").format(new Date());
                     XboxSubscriptionPrice newSPrice = subscriptionsList.get(subscription);
                     Double newPrice = newSPrice.getPrice();
                     Double oldPrice = priceStorage.getPriceBySubscription(subscription).getPrice();
@@ -125,9 +126,9 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                         newSPrice.setLastUpdate(date);
                         priceStorage.updatePrice(newSPrice);
                         if (newPrice > oldPrice) {
-                            sendPriceChangedMessage(SMALL_RED_TRIANGLE + " " + subscriptionsList.get(subscription).toFormattedPriceAsString(), subscription.getLogoPath());
+                            sendPriceChangedMessage(SMALL_RED_TRIANGLE + " " + subscriptionsList.get(subscription).toFormattedPriceAsString(), UPDATED_LOGO_PATH);
                         } else {
-                            sendPriceChangedMessage(SMALL_RED_TRIANGLE_DOWN + " " + subscriptionsList.get(subscription).toFormattedPriceAsString(), subscription.getLogoPath());
+                            sendPriceChangedMessage(SMALL_RED_TRIANGLE_DOWN + " " + subscriptionsList.get(subscription).toFormattedPriceAsString(), UPDATED_LOGO_PATH);
                         }
                         subscriptionsList.remove(subscription);
                     }
