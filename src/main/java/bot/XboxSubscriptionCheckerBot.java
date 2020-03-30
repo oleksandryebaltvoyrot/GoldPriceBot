@@ -135,7 +135,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
 
     void sendPriceMessage(String chatId, String header, String price) {
         try {
-            File headerLogo = new File("/resources/logo/default.jpg");
+            File headerLogo = new File("src/main/resources/logo/default.jpg");
             SendPhoto message = new SendPhoto()
                     .setChatId(chatId)
                     .setPhoto(headerLogo)
