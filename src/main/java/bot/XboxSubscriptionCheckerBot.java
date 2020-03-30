@@ -80,7 +80,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
             if (request.contains("check")) {
                 try {
                     String message = createNotUdatedSubscriptionMessage(dailyPriceCheck());
-                    sendPricePhotoMessage(userId, "*SUBSCRIPTIONS LIST*" + ALIEN_EMOJI + "\n", message + "\n\n\\*_price for UK in GBP_ ", "");
+                    sendPricePhotoMessage(userId, "*SUBSCRIPTIONS LIST*" + ALIEN_EMOJI + "\n", message + "\n\\*_price for UK region in GBP_ ", "");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
