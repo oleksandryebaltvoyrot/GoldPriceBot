@@ -107,8 +107,10 @@ public class SubscriptionDBUtils {
         try {
             PreparedStatement statement = selector.createPreparedStatement(connection);
             ResultSet resultSet = statement.executeQuery();
-            price = resultSet.next() ? resultSet.getDouble(PRICE) : price;
-            date = resultSet.next() ? resultSet.getString(DATE) : date;
+            while (resultSet.next()) {
+                date = resultSet.getString(DATE);
+                price = resultSet.getDouble(PRICE);
+            }
             logger.info("Price selected. NAME:{} PRICE:{} DATE:{}", subscription.getDBColumnName(), price, date);
             statement.close();
             connection.close();
