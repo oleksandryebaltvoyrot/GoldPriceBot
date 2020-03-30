@@ -100,12 +100,10 @@ public class SubscriptionDBUtils {
     public XboxSubscriptionPrice selectPrice(Connection connection, Subscriptions subscription) {
         double price = 0;
         String date = "never";
-        SelectCreator selector =
-                new SelectCreator()
-                        .column(PRICE)
-                        .column(DATE)
-                        .from(SUBSCRIPTIONS)
-                        .whereEquals(NAME, subscription.getDBColumnName());
+        SelectCreator selector = new SelectCreator()
+                .column("*")
+                .from(SUBSCRIPTIONS)
+                .whereEquals(NAME, subscription.getDBColumnName());
         try {
             PreparedStatement statement = selector.createPreparedStatement(connection);
             ResultSet resultSet = statement.executeQuery();
