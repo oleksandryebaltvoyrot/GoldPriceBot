@@ -53,7 +53,7 @@ public class SubscriptionDBUtils {
             statement.executeUpdate();
             statement.close();
             connection.close();
-            logger.info("Price changed. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getDBColumnName(), subscriptionPrice.getPrice());
+            logger.info("Price changed. NAME:{} PRICE:{} DATE:{}", subscriptionPrice.getSubscription().getDBColumnName(), subscriptionPrice.getPrice(), subscriptionPrice.getLastUpdate());
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }
@@ -70,7 +70,7 @@ public class SubscriptionDBUtils {
             statement.executeUpdate();
             statement.close();
             connection.close();
-            logger.info("Price updated. NAME:{} PRICE:{}", subscriptionPrice.getSubscription().getDBColumnName(), subscriptionPrice.getPrice());
+            logger.info("Price updated. NAME:{} PRICE:{} DATE:{}", subscriptionPrice.getSubscription().getDBColumnName(), subscriptionPrice.getPrice(), subscriptionPrice.getLastUpdate());
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }
@@ -111,7 +111,7 @@ public class SubscriptionDBUtils {
             ResultSet resultSet = statement.executeQuery();
             price = resultSet.next() ? resultSet.getDouble(PRICE) : price;
             date = resultSet.next() ? resultSet.getString(DATE) : date;
-            logger.info("Price selected. NAME:{} PRICE:{}", subscription.getDBColumnName(), price);
+            logger.info("Price selected. NAME:{} PRICE:{} DATE:{}", subscription.getDBColumnName(), price, date);
             statement.close();
             connection.close();
         } catch (Exception e) {

@@ -10,7 +10,7 @@ import static utils.Emoji.POUND;
 public class XboxSubscriptionPrice {
     private Subscriptions subscriptionName;
     private Double price;
-    private String lastUpdate = "never";
+    private String lastUpdate = "not_updated";
 
     public Subscriptions getSubscription() {
         return subscriptionName;
@@ -55,7 +55,7 @@ public class XboxSubscriptionPrice {
 
     @Override
     public String toString() {
-        return String.format("%s::%s", subscriptionName, price);
+        return String.format("%s::%s::%s", subscriptionName, price, lastUpdate);
     }
 
     public String toFormattedPriceAsString() {

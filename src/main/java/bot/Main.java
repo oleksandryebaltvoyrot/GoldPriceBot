@@ -27,7 +27,7 @@ public class Main {
             OutputStream output = exchange.getResponseBody();
             output.write(respText.getBytes());
             output.flush();
-            new PriceStorage().createSubscriptionTable();
+            //new PriceStorage().createSubscriptionTable();
             new XboxSubscriptionCheckerBot().dailyPriceCheck();
             new PriceStorage().logTable();
             exchange.close();
