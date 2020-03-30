@@ -71,7 +71,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
             }
             if (request.contains("ultimate")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(ULTIMATE);
-                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + "\n _last update: _" + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
+                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + "\n _last update: " + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
             }
             if (request.contains("game_pass")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(GAME_PASS);
@@ -80,7 +80,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
             if (request.contains("check")) {
                 try {
                     String message = createNotUdatedSubscriptionMessage(dailyPriceCheck());
-                    sendPricePhotoMessage(userId, "*SUBSCRIPTIONS LIST* \n  \\*_price for UK in GBP_ " + ALIEN_EMOJI + "\n", message, "");
+                    sendPricePhotoMessage(userId, "*SUBSCRIPTIONS LIST*" + ALIEN_EMOJI + "\n", message + "\n\n\\*_price for UK in GBP_ ", "");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
