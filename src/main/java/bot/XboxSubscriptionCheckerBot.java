@@ -25,6 +25,7 @@ import static utils.XboxSubscriptionHelper.*;
 public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
     private static final Logger logger = LogManager.getLogger(XboxSubscriptionCheckerBot.class);
     private PriceStorage priceStorage = new PriceStorage();
+    private static final String DEFAULT_LOGO_PATH = "src/main/resources/logo/default.jpg";
 
     @Override
     public String getBotUsername() {
@@ -66,20 +67,20 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                 List<XboxSubscriptionPrice> priceList = goldList.stream().map(sub ->
                         priceStorage.getPriceBySubscription(sub)).collect(Collectors.toList());
                 String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + "\n").collect(Collectors.joining());
-                sendPriceMessage(userId, String.format(header, "GOLD"), message);
+                sendPricePhotoMessage(userId, String.format(header, "GOLD"), message, goldList.get(1).getLogoPath());
             }
             if (request.contains("ultimate")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(ULTIMATE);
-                sendPriceMessage(userId, String.format(header, price.getSubscription().name()), price.toFormattedPriceAsString());
+                sendPricePhotoMessage(userId, String.format(header, price.getSubscription().name()), price.toFormattedPriceAsString(), price.getSubscription().getLogoPath());
             }
             if (request.contains("game_pass")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(GAME_PASS);
-                sendPriceMessage(userId, String.format(header, price.getSubscription().name().replace("_", " ")), price.toFormattedPriceAsString());
+                sendPricePhotoMessage(userId, String.format(header, price.getSubscription().name().replace("_", " ")), price.toFormattedPriceAsString(), price.getSubscription().getLogoPath());
             }
             if (request.contains("check")) {
                 try {
                     String message = createNotUdatedSubscriptionMessage(dailyPriceCheck());
-                    sendPriceMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, message);
+                    sendPricePhotoMessage(userId, "There is nothing new " + Emoji.WORRIED_EMOJI, message, "");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -100,10 +101,10 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
 
     }
 
-    public void sendPriceChangedMessage(String price) {
+    public void sendPriceChangedMessage(String price, String logoPath) {
         final String headerMessage = String.format("%s Price wa$ changed %s", Emoji.ROTATING_LIGHT, Emoji.ROTATING_LIGHT);
         Stream.of(getChatList().split(","))
-                .forEach(user -> sendPriceMessage(user, headerMessage, price));
+                .forEach(user -> sendPricePhotoMessage(user, headerMessage, price, logoPath));
     }
 
     public List<XboxSubscriptionPrice> dailyPriceCheck() throws IOException {
@@ -122,9 +123,9 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                     if (!newPrice.equals(oldPrice)) {
                         priceStorage.updatePrice(newSPrice);
                         if (newPrice > oldPrice) {
-                            sendPriceChangedMessage(SMALL_RED_TRIANGLE + " " + subscriptionsList.get(subscription).toFormattedPriceAsString());
+                            sendPriceChangedMessage(SMALL_RED_TRIANGLE + " " + subscriptionsList.get(subscription).toFormattedPriceAsString(), subscription.getLogoPath());
                         } else {
-                            sendPriceChangedMessage(SMALL_RED_TRIANGLE_DOWN + " " + subscriptionsList.get(subscription).toFormattedPriceAsString());
+                            sendPriceChangedMessage(SMALL_RED_TRIANGLE_DOWN + " " + subscriptionsList.get(subscription).toFormattedPriceAsString(), subscription.getLogoPath());
                         }
                         subscriptionsList.remove(subscription);
                     }
@@ -133,13 +134,14 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
         return new ArrayList<>(subscriptionsList.values());
     }
 
-    void sendPriceMessage(String chatId, String header, String price) {
+    void sendPricePhotoMessage(String chatId, String header, String price, String logoPath) {
         try {
-            File headerLogo = new File("src/main/resources/logo/default.jpg");
+            logoPath = logoPath.isEmpty() ? DEFAULT_LOGO_PATH : logoPath;
+            File headerLogo = new File(logoPath);
             SendPhoto message = new SendPhoto()
                     .setChatId(chatId)
                     .setPhoto(headerLogo)
-                    .setCaption(header + "\n\n" + price)
+                    .setCaption(header + "\n" + price)
                     .setParseMode("Markdown");
 
             execute(message);
