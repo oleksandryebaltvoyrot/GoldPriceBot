@@ -66,16 +66,16 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                 List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE, GOLD_YEAR);
                 List<XboxSubscriptionPrice> priceList = goldList.stream().map(sub ->
                         priceStorage.getPriceBySubscription(sub)).collect(Collectors.toList());
-                String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + " _last update_" + price.getLastUpdate() + "\n").collect(Collectors.joining());
+                String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + " _last update: " + price.getLastUpdate() + "_ \n").collect(Collectors.joining());
                 sendPricePhotoMessage(userId, message, goldList.get(1).getLogoPath());
             }
             if (request.contains("ultimate")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(ULTIMATE);
-                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + " _last update_" + price.getLastUpdate(), price.getSubscription().getLogoPath());
+                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + " _last update: _" + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
             }
             if (request.contains("game_pass")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(GAME_PASS);
-                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + " _last update_" + price.getLastUpdate(), price.getSubscription().getLogoPath());
+                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + "\n _last update: " + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
             }
             if (request.contains("check")) {
                 try {
