@@ -6,11 +6,12 @@ import models.XboxSubscriptionPrice;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import services.PriceStorage;
 import utils.Emoji;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -133,11 +134,13 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
     }
 
     void sendPriceMessage(String chatId, String header, String price) {
-        SendMessage message = new SendMessage()
-                .setChatId(chatId)
-                .setText(header + "\n\n" + price)
-                .enableMarkdown(true);
         try {
+            File headerLogo = new File("/resources/logo/default.jpg");
+            SendPhoto message = new SendPhoto()
+                    .setChatId(chatId)
+                    .setPhoto(headerLogo)
+                    .setCaption(header + "\n\n" + price);
+
             execute(message);
             logger.info(message);
         } catch (Exception e) {
