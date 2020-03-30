@@ -103,9 +103,8 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
     }
 
     public void sendPriceChangedMessage(String price, String logoPath) {
-        final String headerMessage = String.format("%s Price was changed %s", Emoji.VIDEO_GAME, Emoji.VIDEO_GAME);
         Stream.of(getChatList().split(","))
-                .forEach(user -> sendPricePhotoMessage(user, headerMessage, price, logoPath));
+                .forEach(user -> sendPricePhotoMessage(user, price, logoPath));
     }
 
     public List<XboxSubscriptionPrice> dailyPriceCheck() throws IOException {
@@ -126,9 +125,9 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                         newSPrice.setLastUpdate(date);
                         priceStorage.updatePrice(newSPrice);
                         if (newPrice > oldPrice) {
-                            sendPriceChangedMessage(SMALL_RED_TRIANGLE + " " + subscriptionsList.get(subscription).toFormattedPriceAsString(), UPDATED_LOGO_PATH);
+                            sendPriceChangedMessage(SMALL_RED_TRIANGLE + " Price UP" + subscriptionsList.get(subscription).toFormattedPriceAsString(), UPDATED_LOGO_PATH);
                         } else {
-                            sendPriceChangedMessage(SMALL_RED_TRIANGLE_DOWN + " " + subscriptionsList.get(subscription).toFormattedPriceAsString(), UPDATED_LOGO_PATH);
+                            sendPriceChangedMessage(SMALL_RED_TRIANGLE_DOWN + " Price DOWN" + subscriptionsList.get(subscription).toFormattedPriceAsString(), UPDATED_LOGO_PATH);
                         }
                         subscriptionsList.remove(subscription);
                     }
