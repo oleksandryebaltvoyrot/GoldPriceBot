@@ -24,6 +24,7 @@ public class XboxSubscriptionHelper {
     private static String url = "https://www.xbox-now.com/en/xbox-live-gold-comparison?page=3";
     private static String urlPass = "https://www.xbox-now.com/en/game-pass-comparison?page=2";
     private static String urlUltimatePass = "https://www.xbox-now.com/en/game-pass-ultimate-comparison?page=3";
+    private static String urlEA = "https://www.xbox-now.com/en/ea-access-comparison?page=2";
     private static final Pattern PASS_PATTERN = Pattern.compile("<span.*\">(.*)GBP</span>");
     private static OkHttpClient client = new OkHttpClient();
 
@@ -59,14 +60,18 @@ public class XboxSubscriptionHelper {
     }
 
     public static XboxSubscriptionPrice extractGameUltimatePrice() throws IOException {
-        return extractGamePassPrice(ULTIMATE, urlUltimatePass);
+        return extractSubscriptionPrice(ULTIMATE, urlUltimatePass);
     }
 
     public static XboxSubscriptionPrice extractGamePassPrice() throws IOException {
-        return extractGamePassPrice(Subscriptions.GAME_PASS, urlPass);
+        return extractSubscriptionPrice(Subscriptions.GAME_PASS, urlPass);
     }
 
-    private static XboxSubscriptionPrice extractGamePassPrice(Subscriptions subscription, String url) throws IOException {
+    public static XboxSubscriptionPrice extractEaAccessPrice() throws IOException {
+        return extractSubscriptionPrice(EA_ACCESS, urlEA);
+    }
+
+    private static XboxSubscriptionPrice extractSubscriptionPrice(Subscriptions subscription, String url) throws IOException {
         String out = run(url);
         logger.info("start looking for " + subscription.getDBColumnName());
         Matcher matcher = PASS_PATTERN.matcher(out);
