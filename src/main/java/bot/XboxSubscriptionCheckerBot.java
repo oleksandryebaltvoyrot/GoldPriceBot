@@ -26,7 +26,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
     private PriceStorage priceStorage = new PriceStorage();
     private static final String DEFAULT_LOGO_PATH = "src/main/resources/logo/default.jpg";
     private static final String UPDATED_LOGO_PATH = "src/main/resources/logo/updated.jpg";
-    private static final String LAST_TIME_WAS_CHANGED = "\n _last time was changed:_ ";
+    private static final String LAST_TIME_WAS_CHANGED = "\n _last time was changed: ";
 
     @Override
     public String getBotUsername() {
@@ -79,8 +79,11 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                 sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + LAST_TIME_WAS_CHANGED + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
             }
             if (request.contains("ea_access")) {
-                XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(EA_ACCESS);
-                sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + LAST_TIME_WAS_CHANGED + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
+                List<Subscriptions> eaList = Arrays.asList(EA_ACCESS_MONTH, EA_ACCESS_YEAR);
+                List<XboxSubscriptionPrice> priceList = eaList.stream().map(sub ->
+                        priceStorage.getPriceBySubscription(sub)).collect(Collectors.toList());
+                String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + LAST_TIME_WAS_CHANGED + price.getLastUpdate() + "_ \n").collect(Collectors.joining());
+                sendPricePhotoMessage(userId, message, eaList.get(1).getLogoPath());
             }
             if (request.contains("check")) {
                 try {
@@ -113,13 +116,16 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
 
     public List<XboxSubscriptionPrice> dailyPriceCheck() throws IOException {
         List<XboxSubscriptionPrice> golds = extractGoldPrice();
+        List<XboxSubscriptionPrice> ea = extractEaAccessPrice();
         HashMap<Subscriptions, XboxSubscriptionPrice> subscriptionsList = new HashMap<>();
         subscriptionsList.put(GOLD_MONTH, golds.get(0));
         subscriptionsList.put(GOLD_THREE, golds.get(1));
         subscriptionsList.put(GOLD_YEAR, golds.get(2));
         subscriptionsList.put(ULTIMATE, extractGameUltimatePrice());
         subscriptionsList.put(GAME_PASS, extractGamePassPrice());
-        subscriptionsList.put(EA_ACCESS, extractEaAccessPrice());
+        subscriptionsList.put(EA_ACCESS_MONTH, ea.get(0));
+        subscriptionsList.put(EA_ACCESS_YEAR, ea.get(1));
+
 
         subscriptionsList.keySet().forEach(subscription -> {
                     String date = new SimpleDateFormat("dd MMMM yyyy").format(new Date());

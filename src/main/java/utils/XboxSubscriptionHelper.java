@@ -59,16 +59,31 @@ public class XboxSubscriptionHelper {
                 .collect(Collectors.toList());
     }
 
+    public static List<XboxSubscriptionPrice> extractEaAccessPrice() throws IOException {
+        String out = run(url);
+        logger.info("start looking for ea access");
+        Pattern p = Pattern.compile("<span.*\">(.*)GBP</span>.*<span.*\">(.*)GBP</span>");
+        Matcher matcher = p.matcher(out);
+        List<Subscriptions> goldList = Arrays.asList(EA_ACCESS_MONTH, EA_ACCESS_YEAR);
+        if (matcher.find()) {
+            return goldList.stream()
+                    .map(frequency -> new XboxSubscriptionPrice()
+                            .setSubscription(frequency)
+                            .setPrice(Double.valueOf(matcher.group(frequency.getRegExpCode() - 5).trim())))
+                    .collect(Collectors.toList());
+        }
+        logger.info("price not found");
+        return goldList.stream()
+                .map(subscription -> new XboxSubscriptionPrice().setPrice(0.0).setSubscription(subscription))
+                .collect(Collectors.toList());
+    }
+
     public static XboxSubscriptionPrice extractGameUltimatePrice() throws IOException {
         return extractSubscriptionPrice(ULTIMATE, urlUltimatePass);
     }
 
     public static XboxSubscriptionPrice extractGamePassPrice() throws IOException {
         return extractSubscriptionPrice(Subscriptions.GAME_PASS, urlPass);
-    }
-
-    public static XboxSubscriptionPrice extractEaAccessPrice() throws IOException {
-        return extractSubscriptionPrice(EA_ACCESS, urlEA);
     }
 
     private static XboxSubscriptionPrice extractSubscriptionPrice(Subscriptions subscription, String url) throws IOException {
