@@ -62,7 +62,8 @@ public class XboxSubscriptionHelper {
     public static List<XboxSubscriptionPrice> extractEaAccessPrice() throws IOException {
         String out = run(url);
         logger.info("start looking for ea access");
-        Pattern p = Pattern.compile("<span.*\">(.*)GBP</span>.*<span.*\">(.*)GBP</span>");
+        logger.info(out);
+        Pattern p = Pattern.compile("<span.*\">(.*)GBP</span>.*\">(.*)GBP</span>");
         Matcher matcher = p.matcher(out);
         List<Subscriptions> goldList = Arrays.asList(EA_ACCESS_MONTH, EA_ACCESS_YEAR);
         if (matcher.find()) {
