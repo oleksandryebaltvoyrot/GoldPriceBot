@@ -6,8 +6,8 @@ public enum Subscriptions {
     GOLD_YEAR("gold_12", 5, "src/main/resources/logo/gold.jpg", 1),
     ULTIMATE("ultimate", 1, "src/main/resources/logo/ultimate.jpg", 1),
     GAME_PASS("game_pass", 2, "src/main/resources/logo/pass.jpg", 1),
-    EA_ACCESS_MONTH("ea_access_1", 6, "src/main/resources/logo/eaaccess.jpg", 2),
-    EA_ACCESS_YEAR("ea_access_12", 7, "src/main/resources/logo/eaaccess.jpg", 1);
+    EA_ACCESS_MONTH("ea_access_1", 6, "src/main/resources/logo/eaaccess.jpg", 1),
+    EA_ACCESS_YEAR("ea_access_12", 7, "src/main/resources/logo/eaaccess.jpg", 2);
 
     private final String dbColumnName;
     private final String logoPath;
