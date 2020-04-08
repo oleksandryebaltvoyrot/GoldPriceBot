@@ -50,7 +50,7 @@ public class XboxSubscriptionHelper {
             return goldList.stream()
                     .map(frequency -> new XboxSubscriptionPrice()
                             .setSubscription(frequency)
-                            .setPrice(Double.valueOf(matcher.group(frequency.getRegExpCode()).trim())))
+                            .setPrice(Double.valueOf(matcher.group(frequency.getRegExpGroup()).trim())))
                     .collect(Collectors.toList());
         }
         logger.info("price not found");
@@ -62,7 +62,6 @@ public class XboxSubscriptionHelper {
     public static List<XboxSubscriptionPrice> extractEaAccessPrice() throws IOException {
         String out = run(urlEA);
         logger.info("start looking for ea access");
-        logger.info(out);
         Pattern p = Pattern.compile("<span.*\">(.*)GBP</span>.*\">(.*)GBP</span>");
         Matcher matcher = p.matcher(out);
         List<Subscriptions> goldList = Arrays.asList(EA_ACCESS_MONTH, EA_ACCESS_YEAR);
@@ -70,7 +69,7 @@ public class XboxSubscriptionHelper {
             return goldList.stream()
                     .map(frequency -> new XboxSubscriptionPrice()
                             .setSubscription(frequency)
-                            .setPrice(Double.valueOf(matcher.group(frequency.getRegExpCode() - 5).trim())))
+                            .setPrice(Double.valueOf(matcher.group(frequency.getRegExpGroup()).trim())))
                     .collect(Collectors.toList());
         }
         logger.info("price not found");
