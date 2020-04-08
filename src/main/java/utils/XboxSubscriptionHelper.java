@@ -60,7 +60,7 @@ public class XboxSubscriptionHelper {
     }
 
     public static List<XboxSubscriptionPrice> extractEaAccessPrice() throws IOException {
-        String out = run(url);
+        String out = run(urlEA);
         logger.info("start looking for ea access");
         logger.info(out);
         Pattern p = Pattern.compile("<span.*\">(.*)GBP</span>.*\">(.*)GBP</span>");
