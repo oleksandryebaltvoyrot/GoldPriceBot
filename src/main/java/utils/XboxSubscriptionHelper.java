@@ -25,7 +25,7 @@ public class XboxSubscriptionHelper {
     private static String urlPass = "https://www.xbox-now.com/en/game-pass-comparison?page=2";
     private static String urlUltimatePass = "https://www.xbox-now.com/en/game-pass-ultimate-comparison?page=2";
     private static String urlEA = "https://www.xbox-now.com/en/ea-access-comparison?page=2";
-    private static final Pattern PASS_PATTERN = Pattern.compile("<span.*\">(.*)GBP</span>.*<span.*\">(.*)GBP</span>");
+    private static final Pattern PASS_PATTERN = Pattern.compile("<span.*\">(.*)GBP</span>.*\">(.*)GBP</span>");
     private static OkHttpClient client = new OkHttpClient();
 
     private static String run(String url) throws IOException {
@@ -93,7 +93,7 @@ public class XboxSubscriptionHelper {
         if (matcher.find()) {
             XboxSubscriptionPrice price = new XboxSubscriptionPrice()
                     .setSubscription(subscription)
-                    .setPrice(Double.valueOf(matcher.group(2).trim()));
+                    .setPrice(Double.valueOf(matcher.group(1).trim()));
             logger.info("Price found {}", price.getPrice());
             return price;
         }
