@@ -91,9 +91,11 @@ public class XboxSubscriptionHelper {
         logger.info("start looking for " + subscription.getDBColumnName());
         Matcher matcher = PASS_PATTERN.matcher(out);
         if (matcher.find()) {
-            return new XboxSubscriptionPrice()
+            XboxSubscriptionPrice price = new XboxSubscriptionPrice()
                     .setSubscription(subscription)
                     .setPrice(Double.valueOf(matcher.group(2).trim()));
+            logger.info("Price found {}", price.getPrice());
+            return price;
         }
         logger.info("price not found");
         return new XboxSubscriptionPrice().setPrice(0.0).setSubscription(subscription);
