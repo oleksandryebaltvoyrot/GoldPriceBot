@@ -93,7 +93,7 @@ public class XboxSubscriptionHelper {
         if (matcher.find()) {
             XboxSubscriptionPrice price = new XboxSubscriptionPrice()
                     .setSubscription(subscription)
-                    .setPrice(Double.valueOf(matcher.group(1).trim()));
+                    .setPrice(Double.valueOf(matcher.group(2).trim()));
             logger.info("Price found {}", price.getPrice());
             return price;
         }
