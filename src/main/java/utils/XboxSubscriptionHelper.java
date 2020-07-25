@@ -21,23 +21,25 @@ import static enums.Subscriptions.*;
 
 public class XboxSubscriptionHelper {
     private static final Logger logger = LogManager.getLogger(XboxSubscriptionHelper.class);
-    private static String url = "https://www.xbox-now.com/en/xbox-live-gold-comparison?page=3";
-    private static String urlPass = "https://www.xbox-now.com/en/game-pass-comparison?page=2";
-    private static String urlUltimatePass = "https://www.xbox-now.com/en/game-pass-ultimate-comparison?page=2";
-    private static String urlEA = "https://www.xbox-now.com/en/ea-access-comparison?page=2";
+    private static String url = "https://www.xbox-now.com/en/xbox-live-gold-comparison?page=";
+    private static String urlPass = "https://www.xbox-now.com/en/game-pass-comparison?page=";
+    private static String urlUltimatePass = "https://www.xbox-now.com/en/game-pass-ultimate-comparison?page=";
+    private static String urlEA = "https://www.xbox-now.com/en/ea-access-comparison?page=";
     private static final Pattern PASS_PATTERN = Pattern.compile("<span.*\">(.*)GBP</span>.*\">(.*)GBP</span>");
     private static OkHttpClient client = new OkHttpClient();
 
     private static String run(String url) throws IOException {
-        Request request = new Request.Builder()
-                .url(url)
-                .header("User-Agent", "Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
-                .build();
-        logger.info(request);
-        Response response = client.newCall(request).execute();
-        String responseBody = response.body().string().trim().replace("\n", "").replace("\r", "");
-        logger.info("status code " + response.code());
-        return responseBody;
+        StringBuilder responseBody = new StringBuilder();
+        for (int i = 1; i < 4; i++){
+            Request request = new Request.Builder()
+                    .url(url)
+                    .header("User-Agent", "Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
+                    .build();
+            logger.info(request);
+            Response response = client.newCall(request).execute();
+            responseBody.append(response.body().string().trim().replace("\n", "").replace("\r", ""));
+        }
+        return responseBody.toString();
     }
 
     public static List<XboxSubscriptionPrice> extractGoldPrice() throws IOException {
