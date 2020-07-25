@@ -46,9 +46,9 @@ public class XboxSubscriptionHelper {
     public static List<XboxSubscriptionPrice> extractGoldPrice() throws IOException {
         String out = run(url);
         logger.info("start looking for gold");
-        Pattern p = Pattern.compile("title=\"UK\".*Original Price:(.*)GBP.*Original Price:(.*)GBP.*Original Price:(.*)GBP");
+        Pattern p = Pattern.compile("title=\"UK\".*Original Price:(.*)GBP.*Original Price:(.*)GBP");
         Matcher matcher = p.matcher(out);
-        List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE, GOLD_YEAR);
+        List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE);
         if (matcher.find()) {
             return goldList.stream()
                     .map(frequency -> new XboxSubscriptionPrice()
