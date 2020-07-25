@@ -119,7 +119,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
         HashMap<Subscriptions, XboxSubscriptionPrice> subscriptionsList = new HashMap<>();
         subscriptionsList.put(GOLD_MONTH, golds.get(0));
         subscriptionsList.put(GOLD_THREE, golds.get(1));
-        subscriptionsList.put(GOLD_YEAR, new XboxSubscriptionPrice().setPrice(0.0).setLastUpdate("never").setSubscription(GOLD_YEAR));
+        subscriptionsList.put(GOLD_YEAR, new XboxSubscriptionPrice().setPrice(0.0).setLastUpdate("tariff plan canceled").setSubscription(GOLD_YEAR));
         subscriptionsList.put(ULTIMATE, extractGameUltimatePrice());
         subscriptionsList.put(GAME_PASS, extractGamePassPrice());
         subscriptionsList.put(EA_ACCESS_MONTH, ea.get(0));
