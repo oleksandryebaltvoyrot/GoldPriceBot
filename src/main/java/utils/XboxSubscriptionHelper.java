@@ -39,7 +39,7 @@ public class XboxSubscriptionHelper {
             Response response = client.newCall(request).execute();
             responseBody.append(response.body().string().trim().replace(" ", "").replace("\n", "").replace("\r", ""));
         }
-        logger.info(responseBody.toString());
+        //logger.info(responseBody.toString());
         return responseBody.toString();
     }
 
@@ -50,6 +50,7 @@ public class XboxSubscriptionHelper {
         Matcher matcher = p.matcher(out);
         List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE);
         if (matcher.find()) {
+            logger.info("matched");
             return goldList.stream()
                     .map(frequency -> new XboxSubscriptionPrice()
                             .setSubscription(frequency)
