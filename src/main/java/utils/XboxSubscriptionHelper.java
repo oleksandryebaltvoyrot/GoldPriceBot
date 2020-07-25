@@ -32,7 +32,7 @@ public class XboxSubscriptionHelper {
         StringBuilder responseBody = new StringBuilder();
         for (int i = 1; i < 4; i++){
             Request request = new Request.Builder()
-                    .url(url)
+                    .url(url+i)
                     .header("User-Agent", "Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
                     .build();
             logger.info(request);
