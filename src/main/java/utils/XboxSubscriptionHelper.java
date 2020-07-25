@@ -39,6 +39,7 @@ public class XboxSubscriptionHelper {
             Response response = client.newCall(request).execute();
             responseBody.append(response.body().string().trim().replace("\n", "").replace("\r", ""));
         }
+        logger.info(responseBody.toString());
         return responseBody.toString();
     }
 
