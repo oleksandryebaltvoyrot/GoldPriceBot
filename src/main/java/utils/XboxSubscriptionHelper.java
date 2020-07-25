@@ -30,14 +30,14 @@ public class XboxSubscriptionHelper {
 
     private static String run(String url) throws IOException {
         StringBuilder responseBody = new StringBuilder();
-        for (int i = 1; i < 4; i++){
+        for (int i = 1; i < 4; i++) {
             Request request = new Request.Builder()
-                    .url(url+i)
+                    .url(url + i)
                     .header("User-Agent", "Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
                     .build();
             logger.info(request);
             Response response = client.newCall(request).execute();
-            responseBody.append(response.body().string().trim().replace("\n", "").replace("\r", ""));
+            responseBody.append(response.body().string().trim().replace(" ", "").replace("\n", "").replace("\r", ""));
         }
         logger.info(responseBody.toString());
         return responseBody.toString();
