@@ -51,6 +51,8 @@ public class XboxSubscriptionHelper {
         List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE);
         if (matcher.find()) {
             logger.info("matched");
+            logger.info(matcher.group(GOLD_MONTH.getRegExpGroup()));
+            logger.info(matcher.group(GOLD_THREE.getRegExpGroup()));
             return goldList.stream()
                     .map(frequency -> new XboxSubscriptionPrice()
                             .setSubscription(frequency)
@@ -64,8 +66,8 @@ public class XboxSubscriptionHelper {
     }
 
     public static List<XboxSubscriptionPrice> extractEaAccessPrice() throws IOException {
-        String out = run(urlEA);
         logger.info("start looking for ea access");
+        String out = run(urlEA);
         Pattern p = Pattern.compile("<span.*\">(.*)GBP</span>.*\">(.*)GBP</span>");
         Matcher matcher = p.matcher(out);
         List<Subscriptions> goldList = Arrays.asList(EA_ACCESS_MONTH, EA_ACCESS_YEAR);
