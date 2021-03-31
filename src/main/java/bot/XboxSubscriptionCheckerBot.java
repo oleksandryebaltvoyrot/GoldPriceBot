@@ -64,7 +64,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
             final String userId = update.getMessage().getChatId().toString();
             //String header = Arrays.asList(SimpleMessages.values()).get(new Random().nextInt(SimpleMessages.values().length)).getMessage();
             if (request.contains("gold")) {
-                List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE, GOLD_YEAR);
+                List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE); //, GOLD_YEAR);
                 List<XboxSubscriptionPrice> priceList = goldList.stream().map(sub ->
                         priceStorage.getPriceBySubscription(sub)).collect(Collectors.toList());
                 String message = priceList.stream().map(price -> price.toFormattedPriceAsString() + LAST_TIME_WAS_CHANGED + price.getLastUpdate() + "_ \n").collect(Collectors.joining());
@@ -119,7 +119,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
         HashMap<Subscriptions, XboxSubscriptionPrice> subscriptionsList = new HashMap<>();
         subscriptionsList.put(GOLD_MONTH, golds.get(0));
         subscriptionsList.put(GOLD_THREE, golds.get(1));
-        subscriptionsList.put(GOLD_YEAR, new XboxSubscriptionPrice().setPrice(0.0).setLastUpdate("tariff plan canceled").setSubscription(GOLD_YEAR));
+        //subscriptionsList.put(GOLD_YEAR, new XboxSubscriptionPrice().setPrice(0.0).setLastUpdate("tariff plan canceled").setSubscription(GOLD_YEAR));
         subscriptionsList.put(ULTIMATE, extractGameUltimatePrice());
         subscriptionsList.put(GAME_PASS, extractGamePassPrice());
         subscriptionsList.put(EA_ACCESS_MONTH, ea.get(0));
