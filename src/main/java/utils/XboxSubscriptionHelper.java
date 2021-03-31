@@ -43,7 +43,7 @@ public class XboxSubscriptionHelper {
                     .replace("\t", "")
                     .replace("\r", ""));
         }
-        //logger.info(responseBody.toString());
+        logger.info(responseBody.toString());
         return responseBody.toString();
     }
 
