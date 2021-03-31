@@ -37,7 +37,11 @@ public class XboxSubscriptionHelper {
                     .build();
             logger.info(request);
             Response response = client.newCall(request).execute();
-            responseBody.append(response.body().string().trim().replace(" ", "").replace("\n", "").replace("\r", ""));
+            responseBody.append(response.body().string().trim()
+                    .replace(" ", "")
+                    .replace("\n", "")
+                    .replace("\t", "")
+                    .replace("\r", ""));
         }
         //logger.info(responseBody.toString());
         return responseBody.toString();
@@ -51,8 +55,8 @@ public class XboxSubscriptionHelper {
         List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE);
         if (matcher.find()) {
             logger.info("matched");
-            logger.info(matcher.group(GOLD_MONTH.getRegExpGroup()));
-            logger.info(matcher.group(GOLD_THREE.getRegExpGroup()));
+            logger.info("GOLD MONTH: {}", matcher.group(GOLD_MONTH.getRegExpGroup()));
+            logger.info("GOLD 3 MONTHS: {}", matcher.group(GOLD_THREE.getRegExpGroup()));
             return goldList.stream()
                     .map(frequency -> new XboxSubscriptionPrice()
                             .setSubscription(frequency)
