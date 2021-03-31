@@ -74,7 +74,7 @@ public class XboxSubscriptionCheckerBot extends TelegramLongPollingBot {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(ULTIMATE);
                 sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + LAST_TIME_WAS_CHANGED + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
             }
-            if (request.contains("game_pass")) {
+            if (request.contains("pass")) {
                 XboxSubscriptionPrice price = priceStorage.getPriceBySubscription(GAME_PASS);
                 sendPricePhotoMessage(userId, price.toFormattedPriceAsString() + LAST_TIME_WAS_CHANGED + price.getLastUpdate() + "_ ", price.getSubscription().getLogoPath());
             }
