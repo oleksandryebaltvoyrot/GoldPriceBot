@@ -43,14 +43,14 @@ public class XboxSubscriptionHelper {
                     .replace("\t", "")
                     .replace("\r", ""));
         }
-        logger.info(responseBody.toString());
+        //logger.info(responseBody.toString());
         return responseBody.toString();
     }
 
     public static List<XboxSubscriptionPrice> extractGoldPrice() throws IOException {
         String out = run(url);
         logger.info("start looking for gold");
-        Pattern p = Pattern.compile(".*countryflagUK.*OriginalPrice:(.*)GBP.*OriginalPrice:(.*)GBP");
+        Pattern p = Pattern.compile(".countryflagUK.*OriginalPrice:(.*)GBP.*OriginalPrice:(.*)GBP.data-placement");
         Matcher matcher = p.matcher(out);
         List<Subscriptions> goldList = Arrays.asList(GOLD_MONTH, GOLD_THREE);
         if (matcher.find()) {
